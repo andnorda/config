@@ -8,13 +8,17 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 public class ApplicationIT {
 
+    private ApplicationResource resource;
+
     @Before
     public void setUp() throws Exception {
         new File("repo").mkdir();
+        resource = new ApplicationResource(new FileRepository(new File("repo")));
     }
 
     @After
@@ -23,10 +27,16 @@ public class ApplicationIT {
     }
 
     @Test
-    public void test() throws Exception {
+    public void returnsEmptyCollection() throws Exception {
+        assertThat(resource.getAll(), is(empty()));
+    }
+
+    @Test
+    public void returnsCollectionWithOneApplication() throws Exception {
+        // Given
         new File("repo/app1").mkdir();
 
-        ApplicationResource applicationResource = new ApplicationResource(new FileRepository(new File("repo")));
-        assertThat(applicationResource.getAll().size(), is(1));
+        // Then
+        assertThat(resource.getAll().size(), is(1));
     }
 }
