@@ -39,4 +39,14 @@ public class ApplicationIT {
         // Then
         assertThat(resource.getAll().size(), is(1));
     }
+
+    @Test
+    public void filtersOutNonDirs() throws Exception {
+        // Given
+        new File("repo/app1").mkdir();
+        new File("repo/notADir").createNewFile();
+
+        // Then
+        assertThat(resource.getAll().size(), is(1));
+    }
 }

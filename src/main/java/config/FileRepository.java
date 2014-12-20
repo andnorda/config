@@ -23,6 +23,7 @@ public class FileRepository implements ApplicationRepository {
     public Collection<ApplicationDto> getAll() {
         List<File> files = Arrays.asList(baseDir.listFiles());
         return files.stream()
+                .filter(File::isDirectory)
                 .map(file -> new ApplicationDto())
                 .collect(Collectors.toCollection(HashSet::new));
     }
