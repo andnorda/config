@@ -1,4 +1,7 @@
-package config;
+package config.fakes;
+
+import config.dtos.ApplicationDto;
+import config.repository.ApplicationRepository;
 
 import java.util.Collection;
 import java.util.HashMap;

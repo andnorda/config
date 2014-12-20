@@ -1,4 +1,6 @@
-package config;
+package config.repository;
+
+import config.dtos.ApplicationDto;
 
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-package config;
+package config.exceptions;
 
 public class NotFound extends RuntimeException {
 }

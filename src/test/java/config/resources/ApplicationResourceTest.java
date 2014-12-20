@@ -1,5 +1,7 @@
-package config;
+package config.resources;
 
+import config.fakes.FakeApplicationRepository;
+import config.dtos.ApplicationDto;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,6 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ApplicationResourceTest {
+
     private FakeApplicationRepository repo;
     private ApplicationResource resource;
 

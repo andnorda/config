@@ -1,4 +1,6 @@
-package config;
+package config.repository;
+
+import config.dtos.ApplicationDto;
 
 import java.io.File;
 import java.util.Arrays;

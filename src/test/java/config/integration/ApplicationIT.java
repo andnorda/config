@@ -1,5 +1,7 @@
-package config;
+package config.integration;
 
+import config.repository.FileRepository;
+import config.resources.ApplicationResource;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
