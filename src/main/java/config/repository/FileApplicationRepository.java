@@ -9,10 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FileRepository implements ApplicationRepository {
+public class FileApplicationRepository implements ApplicationRepository {
     private File baseDir;
 
-    public FileRepository(File baseDir) {
+    public FileApplicationRepository(File baseDir) {
         this.baseDir = baseDir;
     }
 

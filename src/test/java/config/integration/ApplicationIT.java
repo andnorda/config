@@ -1,6 +1,6 @@
 package config.integration;
 
-import config.repository.FileRepository;
+import config.repository.FileApplicationRepository;
 import config.resources.ApplicationResource;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -20,7 +20,7 @@ public class ApplicationIT {
     @Before
     public void setUp() throws Exception {
         new File("repo").mkdir();
-        resource = new ApplicationResource(new FileRepository(new File("repo")));
+        resource = new ApplicationResource(new FileApplicationRepository(new File("repo")));
     }
 
     @After
