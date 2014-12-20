@@ -20,7 +20,7 @@ public class ApplicationResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        ApplicationDto applicationDto = new ApplicationDto();
+        ApplicationDto applicationDto = new ApplicationDto("app name");
         repo.add("app name", applicationDto);
 
         // Then
@@ -30,8 +30,8 @@ public class ApplicationResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        ApplicationDto app1 = new ApplicationDto();
-        ApplicationDto app2 = new ApplicationDto();
+        ApplicationDto app1 = new ApplicationDto("app1");
+        ApplicationDto app2 = new ApplicationDto("app2");
         repo.add("app1", app1);
         repo.add("app2", app2);
 

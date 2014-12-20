@@ -24,7 +24,7 @@ public class FileRepository implements ApplicationRepository {
         List<File> files = Arrays.asList(baseDir.listFiles());
         return files.stream()
                 .filter(File::isDirectory)
-                .map(file -> new ApplicationDto())
+                .map(file -> new ApplicationDto(file.getName()))
                 .collect(Collectors.toCollection(HashSet::new));
     }
 }

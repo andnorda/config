@@ -38,6 +38,7 @@ public class ApplicationIT {
 
         // Then
         assertThat(resource.getAll().size(), is(1));
+        assertThat(resource.getAll().iterator().next().getName(), is("app1"));
     }
 
     @Test
