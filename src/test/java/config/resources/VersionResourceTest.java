@@ -41,5 +41,4 @@ public class VersionResourceTest {
         // Then
         assertThat(resource.getAll("app"), hasItems(version1, version2));
     }
-
 }
