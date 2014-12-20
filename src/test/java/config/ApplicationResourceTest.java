@@ -27,11 +27,6 @@ public class ApplicationResourceTest {
         assertThat(resource.get("app name"), is(applicationDto));
     }
 
-    @Test(expected = NotFound.class)
-    public void throwsNotFound() throws Exception {
-        resource.get("not found");
-    }
-
     @Test
     public void getAll() throws Exception {
         // Given
