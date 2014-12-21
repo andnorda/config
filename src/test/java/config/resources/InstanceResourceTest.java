@@ -1,5 +1,6 @@
 package config.resources;
 
+import com.google.common.collect.ImmutableList;
 import config.dtos.InstanceDto;
 import config.fakes.FakeInstanceRepository;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class InstanceResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        InstanceDto instanceDto = new InstanceDto("instance name");
+        InstanceDto instanceDto = new InstanceDto("instance name", ImmutableList.of("file"));
         repo.add("app name", "version name", "instance name", instanceDto);
 
         // Then
@@ -33,8 +34,8 @@ public class InstanceResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        InstanceDto instance1 = new InstanceDto("instance1");
-        InstanceDto instance2 = new InstanceDto("instance2");
+        InstanceDto instance1 = new InstanceDto("instance1", ImmutableList.of("file"));
+        InstanceDto instance2 = new InstanceDto("instance2", ImmutableList.of("file"));
         repo.add("app", "version", "instance1", instance1);
         repo.add("app", "version", "instance2", instance2);
 

@@ -17,7 +17,7 @@ public class FileInstanceRepository extends FileRepository implements InstanceRe
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
         File instance = getSubDirWithName(version, instanceName);
-        return new InstanceDto(instance.getName());
+        return new InstanceDto(instance.getName(), listPropertyFileNames(instance));
     }
 
     @Override
@@ -25,7 +25,7 @@ public class FileInstanceRepository extends FileRepository implements InstanceRe
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
         return listSubDirs(version).stream()
-                .map(file -> new InstanceDto(file.getName()))
+                .map(file -> new InstanceDto(file.getName(), listPropertyFileNames(file)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

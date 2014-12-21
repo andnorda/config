@@ -1,5 +1,6 @@
 package config.repository;
 
+import config.dtos.InstanceDto;
 import config.exceptions.NotFound;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -62,10 +64,14 @@ public class FileInstanceRepositoryIT {
             // Given
             new File("repo/app/version/instance").mkdirs();
             new File("repo/app/version/nonDir").createNewFile();
+            new File("repo/app/version/instance/file1.properties").createNewFile();
+            new File("repo/app/version/instance/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.getAll("app", "version").size(), is(1));
-            assertThat(repo.getAll("app", "version").iterator().next().getName(), is("instance"));
+            InstanceDto instance = repo.getAll("app", "version").iterator().next();
+            assertThat(instance.getName(), is("instance"));
+            assertThat(instance.getPropertyFiles(), hasItems("file1", "file2"));
         }
     }
 
@@ -124,9 +130,12 @@ public class FileInstanceRepositoryIT {
             // Given
             new File("repo/app/version/instance").mkdirs();
             new File("repo/app/version/instance").createNewFile();
+            new File("repo/app/version/instance/file1.properties").createNewFile();
+            new File("repo/app/version/instance/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version", "instance").getName(), is("instance"));
+            assertThat(repo.get("app", "version", "instance").getPropertyFiles(), hasItems("file1", "file2"));
         }
     }
 }

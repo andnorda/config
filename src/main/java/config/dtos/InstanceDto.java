@@ -3,8 +3,11 @@ package config.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Collection;
+
 @Getter
 @AllArgsConstructor
 public class InstanceDto {
     private final String name;
+    private final Collection<String> propertyFiles;
 }
