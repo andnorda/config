@@ -73,7 +73,7 @@ public class FileInstancePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenDirFile() throws Exception {
             // Given
-            new File("repo/app/version/instance/file.properties").mkdirs();
+            new File("repo/app/version/instance/file").mkdirs();
 
             // When
             repo.get("app", "version", "instance", "file");
@@ -83,8 +83,8 @@ public class FileInstancePropertyFileRepositoryIT {
         public void returnsPropertyFile() throws Exception {
             // Given
             new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/version/instance/file.properties").createNewFile();
-            new File("repo/app/version/instance/file.properties").mkdir();
+            new File("repo/app/version/instance/file").createNewFile();
+            new File("repo/app/version/instance/file").mkdir();
 
             // Then
             assertThat(repo.get("app", "version", "instance", "file").getName(), is("file"));
@@ -143,9 +143,8 @@ public class FileInstancePropertyFileRepositoryIT {
         public void returnsCollectionWithOneFile() throws Exception {
             // Given
             new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/version/instance/file.properties").createNewFile();
-            new File("repo/app/version/instance/file.nope").createNewFile();
-            new File("repo/app/version/instance/notAFile.properties").mkdir();
+            new File("repo/app/version/instance/file").createNewFile();
+            new File("repo/app/version/instance/notAFile").mkdir();
 
             // Then
             assertThat(repo.getAll("app", "version", "instance").size(), is(1));
@@ -205,7 +204,7 @@ public class FileInstancePropertyFileRepositoryIT {
         public void updatesProperty() throws Exception {
             // Given
             new File("repo/app/version/instance").mkdirs();
-            PrintWriter writer = new PrintWriter("repo/app/version/instance/file.properties", "UTF-8");
+            PrintWriter writer = new PrintWriter("repo/app/version/instance/file", "UTF-8");
             writer.println("key=old");
             writer.close();
 

@@ -84,7 +84,7 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
     private void writeNewPropertiesToFile(File parent, String fileName, PropertyFileDto propertyFileDto) {
         PrintWriter writer;
         try {
-            writer = new PrintWriter(parent.getPath() + "/" + fileName + ".properties", "UTF-8");
+            writer = new PrintWriter(parent.getPath() + "/" + fileName, "UTF-8");
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

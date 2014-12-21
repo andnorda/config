@@ -65,8 +65,8 @@ public class FileVersionRepositoryIT {
             new File("repo/app/version").mkdirs();
             new File("repo/app/version/instance1").mkdirs();
             new File("repo/app/version/instance2").mkdirs();
-            new File("repo/app/version/file1.properties").createNewFile();
-            new File("repo/app/version/file2.properties").createNewFile();
+            new File("repo/app/version/file1").createNewFile();
+            new File("repo/app/version/file2").createNewFile();
 
             // Then
             assertThat(repo.getAll("app").size(), is(1));
@@ -134,8 +134,8 @@ public class FileVersionRepositoryIT {
             new File("repo/app/version/instance1").mkdirs();
             new File("repo/app/version/instance2").mkdirs();
             new File("repo/app/version").createNewFile();
-            new File("repo/app/version/file1.properties").createNewFile();
-            new File("repo/app/version/file2.properties").createNewFile();
+            new File("repo/app/version/file1").createNewFile();
+            new File("repo/app/version/file2").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version").getName(), is("version"));

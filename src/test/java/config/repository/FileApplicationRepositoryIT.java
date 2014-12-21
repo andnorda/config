@@ -47,8 +47,8 @@ public class FileApplicationRepositoryIT {
             new File("repo/app").mkdir();
             new File("repo/app/version1").mkdir();
             new File("repo/app/version2").mkdir();
-            new File("repo/app/file1.properties").createNewFile();
-            new File("repo/app/file2.properties").createNewFile();
+            new File("repo/app/file1").createNewFile();
+            new File("repo/app/file2").createNewFile();
 
             // Then
             assertThat(repo.getAll().size(), is(1));
@@ -106,8 +106,8 @@ public class FileApplicationRepositoryIT {
             new File("repo/app/version1").mkdir();
             new File("repo/app/version2").mkdir();
             new File("repo/app").createNewFile();
-            new File("repo/app/file1.properties").createNewFile();
-            new File("repo/app/file2.properties").createNewFile();
+            new File("repo/app/file1").createNewFile();
+            new File("repo/app/file2").createNewFile();
 
             // Then
             assertThat(repo.get("app").getName(), is("app"));

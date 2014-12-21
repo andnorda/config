@@ -65,8 +65,8 @@ public class FileInstanceRepositoryIT {
             // Given
             new File("repo/app/version/instance").mkdirs();
             new File("repo/app/version/nonDir").createNewFile();
-            new File("repo/app/version/instance/file1.properties").createNewFile();
-            new File("repo/app/version/instance/file2.properties").createNewFile();
+            new File("repo/app/version/instance/file1").createNewFile();
+            new File("repo/app/version/instance/file2").createNewFile();
 
             // Then
             assertThat(repo.getAll("app", "version").size(), is(1));
@@ -131,8 +131,8 @@ public class FileInstanceRepositoryIT {
             // Given
             new File("repo/app/version/instance").mkdirs();
             new File("repo/app/version/instance").createNewFile();
-            new File("repo/app/version/instance/file1.properties").createNewFile();
-            new File("repo/app/version/instance/file2.properties").createNewFile();
+            new File("repo/app/version/instance/file1").createNewFile();
+            new File("repo/app/version/instance/file2").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version", "instance").getName(), is("instance"));

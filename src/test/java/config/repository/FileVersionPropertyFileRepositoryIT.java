@@ -64,7 +64,7 @@ public class FileVersionPropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenDirFile() throws Exception {
             // Given
-            new File("repo/app/version/file.properties").mkdirs();
+            new File("repo/app/version/file").mkdirs();
 
             // When
             repo.get("app", "version", "file");
@@ -74,8 +74,8 @@ public class FileVersionPropertyFileRepositoryIT {
         public void returnsPropertyFile() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
-            new File("repo/app/version/file.properties").createNewFile();
-            new File("repo/app/version/file.properties").mkdir();
+            new File("repo/app/version/file").createNewFile();
+            new File("repo/app/version/file").mkdir();
 
             // Then
             assertThat(repo.get("app", "version", "file").getName(), is("file"));
@@ -125,9 +125,8 @@ public class FileVersionPropertyFileRepositoryIT {
         public void returnsCollectionWithOneFile() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
-            new File("repo/app/version/file.properties").createNewFile();
-            new File("repo/app/version/file.nope").createNewFile();
-            new File("repo/app/version/notAFile.properties").mkdir();
+            new File("repo/app/version/file").createNewFile();
+            new File("repo/app/version/notAFile").mkdir();
 
             // Then
             assertThat(repo.getAll("app", "version").size(), is(1));
@@ -178,7 +177,7 @@ public class FileVersionPropertyFileRepositoryIT {
         public void updatesProperty() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
-            PrintWriter writer = new PrintWriter("repo/app/version/file.properties", "UTF-8");
+            PrintWriter writer = new PrintWriter("repo/app/version/file", "UTF-8");
             writer.println("key=old");
             writer.close();
 

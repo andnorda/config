@@ -51,20 +51,20 @@ public class FileRepository {
     }
 
     protected Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
+        List<File> propertyFiles = Arrays.asList(parent.listFiles(File::isFile));
         return propertyFiles.stream()
-                .map(file -> new PropertyFileDto(file.getName().replace(".properties", ""), getProperties(file)))
+                .map(file -> new PropertyFileDto(file.getName(), getProperties(file)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     protected PropertyFileDto getPropertyFileWithName(File parent, String fileName) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.getName().equals(fileName + ".properties") && file.isFile()));
+        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.getName().equals(fileName) && file.isFile()));
         if (propertyFiles.isEmpty()) {
             throw new NotFound();
         }
         File file = propertyFiles.get(0);
         Map<String, String> propertyMap = getProperties(file);
-        return new PropertyFileDto(file.getName().replace(".properties", ""), propertyMap);
+        return new PropertyFileDto(file.getName(), propertyMap);
     }
 
     private Map<String, String> getProperties(File file) {
