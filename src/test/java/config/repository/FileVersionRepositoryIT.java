@@ -121,6 +121,7 @@ public class FileVersionRepositoryIT {
         public void returnsVersion() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
+            new File("repo/app/version").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version").getName(), is("version"));
