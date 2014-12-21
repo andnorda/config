@@ -39,7 +39,12 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
 
     @Override
     public PropertyFileDto get(String appName, String versionName, String fileName) {
-        return versionPropertyFiles.get(appName + versionName + fileName);
+        return new PropertyFileDto(fileName, new HashMap<>(versionPropertyFiles.get(appName + versionName + fileName).getProperties()));
+    }
+
+    @Override
+    public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
+        versionPropertyFiles.put(appName + versionName + fileName, propertyFileDto);
     }
 
     @Override
@@ -58,7 +63,12 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
 
     @Override
     public PropertyFileDto get(String appName, String versionName, String instanceName, String fileName) {
-        return instancePropertyFiles.get(appName + versionName + instanceName + fileName);
+        return new PropertyFileDto(fileName, new HashMap<>(instancePropertyFiles.get(appName + versionName + instanceName + fileName).getProperties()));
+    }
+
+    @Override
+    public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
+        instancePropertyFiles.put(appName + versionName + instanceName + fileName, propertyFileDto);
     }
 
     @Override

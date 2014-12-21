@@ -37,14 +37,14 @@ public class ApplicationResource {
 
     @GET
     @Path("/{application}/files")
-    public Collection<PropertyFileDto> getAllApplicationPropertyFiles(
+    public Collection<PropertyFileDto> getAllFiles(
             @PathParam("application") String appName) {
         return propertyFileService.getAll(appName);
     }
 
     @GET
     @Path("/{application}/files/{file}")
-    public PropertyFileDto getApplicationPropertyFile(
+    public PropertyFileDto getFile(
             @PathParam("application") String appName,
             @PathParam("file") String fileName) {
         return propertyFileService.get(appName, fileName);

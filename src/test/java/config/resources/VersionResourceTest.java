@@ -7,6 +7,7 @@ import config.dtos.VersionDto;
 import config.fakes.FakePropertyFileRepository;
 import config.fakes.FakeVersionRepository;
 import config.servies.PropertyFileServiceImpl;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +59,7 @@ public class VersionResourceTest {
         propertyFileRepository.addVersionPropertyFile("app", "version", "file", propertyFileDto);
 
         // Then
-        Assert.assertThat(resource.getVersionPropertyFile("app", "version", "file"), Is.is(propertyFileDto));
+        Assert.assertThat(resource.getFile("app", "version", "file"), Is.is(propertyFileDto));
     }
 
     @Test
@@ -70,6 +71,18 @@ public class VersionResourceTest {
         propertyFileRepository.addVersionPropertyFile("app", "version", "file2", propertyFile2);
 
         // Then
-        Assert.assertThat(resource.getAllVersionPropertyFiles("app", "version"), hasItems(propertyFile1, propertyFile2));
+        Assert.assertThat(resource.getAllFiles("app", "version"), hasItems(propertyFile1, propertyFile2));
+    }
+
+    @Test
+    public void changesPropertyValue() throws Exception {
+        // Given
+        propertyFileRepository.addVersionPropertyFile("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+
+        // When
+        resource.changeProperty("app", "version", "file", "key", "new");
+
+        // Then
+        Assert.assertThat(resource.getFile("app", "version", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
     }
 }

@@ -58,7 +58,7 @@ public class InstanceResourceTest {
         propertyFileRepository.addInstancePropertyFile("app", "version", "instance", "file", propertyFileDto);
 
         // Then
-        Assert.assertThat(resource.getInstancePropertyFile("app", "version", "instance", "file"), Is.is(propertyFileDto));
+        Assert.assertThat(resource.getFile("app", "version", "instance", "file"), Is.is(propertyFileDto));
     }
 
     @Test
@@ -70,6 +70,18 @@ public class InstanceResourceTest {
         propertyFileRepository.addInstancePropertyFile("app", "version", "instance", "file2", propertyFile2);
 
         // Then
-        Assert.assertThat(resource.getAllInstancePropertyFiles("app", "version", "instance"), hasItems(propertyFile1, propertyFile2));
+        Assert.assertThat(resource.getAllFiles("app", "version", "instance"), hasItems(propertyFile1, propertyFile2));
+    }
+
+    @Test
+    public void changesPropertyValue() throws Exception {
+        // Given
+        propertyFileRepository.addInstancePropertyFile("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+
+        // When
+        resource.changeProperty("app", "version", "instance", "file", "key", "new");
+
+        // Then
+        Assert.assertThat(resource.getFile("app", "version", "instance", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
     }
 }

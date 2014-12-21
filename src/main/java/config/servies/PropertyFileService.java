@@ -11,8 +11,9 @@ public interface PropertyFileService {
 
     Collection<PropertyFileDto> getAll(String appName, String versionName);
     PropertyFileDto get(String appName, String versionName, String fileName);
+    void changeProperty(String appName, String versionName, String fileName, String propertyKey, String propertyValue);
 
     Collection<PropertyFileDto> getAll(String appName, String versionName, String instanceName);
     PropertyFileDto get(String appName, String versionName, String instanceName, String fileName);
-
+    void changeProperty(String appName, String versionName, String instanceName, String fileName, String propertyKey, String propertyValue);
 }

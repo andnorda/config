@@ -7,10 +7,7 @@ import config.dtos.PropertyFileDto;
 import config.fakes.FakeApplicationRepository;
 import config.fakes.FakePropertyFileRepository;
 import config.servies.PropertyFileServiceImpl;
-import org.hamcrest.core.Is;
-import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -59,7 +56,7 @@ public class ApplicationResourceTest {
         propertyFileRepository.addApplicationPropertyFile("app", "file", propertyFileDto);
 
         // Then
-        assertThat(resource.getApplicationPropertyFile("app", "file"), is(propertyFileDto));
+        assertThat(resource.getFile("app", "file"), is(propertyFileDto));
     }
 
     @Test
@@ -71,7 +68,7 @@ public class ApplicationResourceTest {
         propertyFileRepository.addApplicationPropertyFile("app", "file2", propertyFile2);
 
         // Then
-        assertThat(resource.getAllApplicationPropertyFiles("app"), hasItems(propertyFile1, propertyFile2));
+        assertThat(resource.getAllFiles("app"), hasItems(propertyFile1, propertyFile2));
     }
 
     @Test
@@ -83,6 +80,6 @@ public class ApplicationResourceTest {
         resource.changeProperty("app", "file", "key", "new");
 
         // Then
-        assertThat(resource.getApplicationPropertyFile("app", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
+        assertThat(resource.getFile("app", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
     }
 }

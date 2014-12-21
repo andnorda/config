@@ -39,7 +39,7 @@ public class VersionResource {
 
     @GET
     @Path("/{version}/files")
-    public Collection<PropertyFileDto> getAllVersionPropertyFiles(
+    public Collection<PropertyFileDto> getAllFiles(
             @PathParam("application") String appName,
             @PathParam("version") String versionName) {
         return propertyFileService.getAll(appName, versionName);
@@ -47,10 +47,14 @@ public class VersionResource {
 
     @GET
     @Path("{version}/files/{file}")
-    public PropertyFileDto getVersionPropertyFile(
+    public PropertyFileDto getFile(
             @PathParam("application") String appName,
             @PathParam("version") String versionName,
             @PathParam("file") String fileName) {
         return propertyFileService.get(appName, versionName, fileName);
+    }
+
+    public void changeProperty(String appName, String versionName, String fileName, String propertyKey, String propertyValue) {
+        propertyFileService.changeProperty(appName, versionName, fileName, propertyKey, propertyValue);
     }
 }

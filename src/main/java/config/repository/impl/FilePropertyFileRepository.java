@@ -36,6 +36,11 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
     }
 
     @Override
+    public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
+
+    }
+
+    @Override
     public Collection<PropertyFileDto> getAll(String appName, String versionName) {
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
@@ -48,6 +53,11 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
         File version = getSubDirWithName(app, versionName);
         File instance = getSubDirWithName(version, instanceName);
         return getPropertyFileWithName(instance, fileName);
+    }
+
+    @Override
+    public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
+
     }
 
     @Override

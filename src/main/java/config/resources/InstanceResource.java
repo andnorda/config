@@ -41,7 +41,7 @@ public class InstanceResource {
 
     @GET
     @Path("/{instance}/files")
-    public Collection<PropertyFileDto> getAllInstancePropertyFiles(
+    public Collection<PropertyFileDto> getAllFiles(
             @PathParam("application") String appName,
             @PathParam("version") String versionName,
             @PathParam("instance") String instanceName) {
@@ -50,11 +50,15 @@ public class InstanceResource {
 
     @GET
     @Path("/{instance}/files/{file}")
-    public PropertyFileDto getInstancePropertyFile(
+    public PropertyFileDto getFile(
             @PathParam("application") String appName,
             @PathParam("version") String versionName,
             @PathParam("instance") String instanceName,
             @PathParam("file") String fileName) {
         return propertyFileService.get(appName, versionName, instanceName, fileName);
+    }
+
+    public void changeProperty(String appName, String versionName, String instanceName, String fileName, String propertyKey, String propertyValue) {
+        propertyFileService.changeProperty(appName, versionName, instanceName, fileName, propertyKey, propertyValue);
     }
 }
