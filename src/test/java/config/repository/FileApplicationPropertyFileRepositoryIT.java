@@ -99,7 +99,7 @@ public class FileApplicationPropertyFileRepositoryIT {
         }
 
         @Test
-        public void returnsEmptyCollectionWithOneFile() throws Exception {
+        public void returnsCollectionWithOneFile() throws Exception {
             // Given
             new File("repo/app").mkdir();
             new File("repo/app/file.properties").createNewFile();

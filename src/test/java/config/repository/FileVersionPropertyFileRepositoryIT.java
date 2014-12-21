@@ -93,31 +93,40 @@ public class FileVersionPropertyFileRepositoryIT {
             FileUtils.deleteDirectory(baseDir);
         }
 
-//        @Test (expected = NotFound.class)
-//        public void throwsNotFound_GivenNoApp() throws Exception {
-//            repo.getAllApplicationPropertyFiles("app");
-//        }
-//
-//        @Test
-//        public void returnsEmptyCollection() throws Exception {
-//            // Given
-//            new File("repo/app").mkdir();
-//
-//            // Then
-//            assertThat(repo.getAllApplicationPropertyFiles("app"), is(empty()));
-//        }
-//
-//        @Test
-//        public void returnsEmptyCollectionWithOneFile() throws Exception {
-//            // Given
-//            new File("repo/app").mkdir();
-//            new File("repo/app/file.properties").createNewFile();
-//            new File("repo/app/file.nope").createNewFile();
-//            new File("repo/app/notAFile.properties").mkdir();
-//
-//            // Then
-//            assertThat(repo.getAllApplicationPropertyFiles("app").size(), is(1));
-//            assertThat(repo.getAllApplicationPropertyFiles("app").iterator().next().getName(), is("file"));
-//        }
+        @Test (expected = NotFound.class)
+        public void throwsNotFound_GivenNoApp() throws Exception {
+            repo.getAllVersionPropertyFiles("app", "version");
+        }
+
+        @Test (expected = NotFound.class)
+        public void throwsNotFound_GivenNoVersion() throws Exception {
+            // Given
+            new File("repo/app").mkdir();
+
+            // Then
+            repo.getAllVersionPropertyFiles("app", "version");
+        }
+
+        @Test
+        public void returnsEmptyCollection() throws Exception {
+            // Given
+            new File("repo/app/version").mkdirs();
+
+            // Then
+            assertThat(repo.getAllVersionPropertyFiles("app", "version"), is(empty()));
+        }
+
+        @Test
+        public void returnsCollectionWithOneFile() throws Exception {
+            // Given
+            new File("repo/app/version").mkdirs();
+            new File("repo/app/version/file.properties").createNewFile();
+            new File("repo/app/version/file.nope").createNewFile();
+            new File("repo/app/version/notAFile.properties").mkdir();
+
+            // Then
+            assertThat(repo.getAllVersionPropertyFiles("app", "version").size(), is(1));
+            assertThat(repo.getAllVersionPropertyFiles("app", "version").iterator().next().getName(), is("file"));
+        }
     }
 }
