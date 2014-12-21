@@ -1,8 +1,13 @@
 package config.resources;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import config.dtos.PropertyFileDto;
 import config.dtos.VersionDto;
+import config.fakes.FakePropertyFileRepository;
 import config.fakes.FakeVersionRepository;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,20 +17,22 @@ import static org.hamcrest.core.IsCollectionContaining.hasItems;
 
 public class VersionResourceTest {
 
-    private FakeVersionRepository repo;
+    private FakeVersionRepository versionRepository;
+    private FakePropertyFileRepository propertyFileRepository;
     private VersionResource resource;
 
     @Before
     public void setUp() throws Exception {
-        repo = new FakeVersionRepository();
-        resource = new VersionResource(repo);
+        versionRepository = new FakeVersionRepository();
+        propertyFileRepository = new FakePropertyFileRepository();
+        resource = new VersionResource(versionRepository, propertyFileRepository);
     }
 
     @Test
     public void getOne() throws Exception {
         // Given
         VersionDto versionDto = new VersionDto("version name", ImmutableList.of("instance"), ImmutableList.of("file"));
-        repo.add("app name", "version name", versionDto);
+        versionRepository.add("app name", "version name", versionDto);
 
         // Then
         assertThat(resource.get("app name", "version name"), is(versionDto));
@@ -36,10 +43,32 @@ public class VersionResourceTest {
         // Given
         VersionDto version1 = new VersionDto("version1", ImmutableList.of("instance"), ImmutableList.of("file"));
         VersionDto version2 = new VersionDto("version2", ImmutableList.of("instance"), ImmutableList.of("file"));
-        repo.add("app", "version1", version1);
-        repo.add("app", "version2", version2);
+        versionRepository.add("app", "version1", version1);
+        versionRepository.add("app", "version2", version2);
 
         // Then
         assertThat(resource.getAll("app"), hasItems(version1, version2));
+    }
+
+    @Test
+    public void returnsVersionPropertyFile() throws Exception {
+        // Given
+        PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
+        propertyFileRepository.addVersionPropertyFile("app", "version", "file", propertyFileDto);
+
+        // Then
+        Assert.assertThat(resource.getVersionPropertyFile("app", "version", "file"), Is.is(propertyFileDto));
+    }
+
+    @Test
+    public void returnsAllVersionPropertyFiles() throws Exception {
+        // Given
+        PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
+        PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
+        propertyFileRepository.addVersionPropertyFile("app", "version", "file1", propertyFile1);
+        propertyFileRepository.addVersionPropertyFile("app", "version", "file2", propertyFile2);
+
+        // Then
+        Assert.assertThat(resource.getAllVersionPropertyFiles("app", "version"), hasItems(propertyFile1, propertyFile2));
     }
 }
