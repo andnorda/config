@@ -46,12 +46,15 @@ public class FileApplicationRepositoryIT {
             new File("repo/app").mkdir();
             new File("repo/app/version1").mkdir();
             new File("repo/app/version2").mkdir();
+            new File("repo/app/file1.properties").createNewFile();
+            new File("repo/app/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.getAll().size(), is(1));
             ApplicationDto application = repo.getAll().iterator().next();
             assertThat(application.getName(), is("app"));
             assertThat(application.getVersions(), hasItems("version1", "version2"));
+            assertThat(application.getPropertyFiles(), hasItems("file1", "file2"));
         }
 
         @Test
@@ -102,10 +105,13 @@ public class FileApplicationRepositoryIT {
             new File("repo/app/version1").mkdir();
             new File("repo/app/version2").mkdir();
             new File("repo/app").createNewFile();
+            new File("repo/app/file1.properties").createNewFile();
+            new File("repo/app/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.get("app").getName(), is("app"));
             assertThat(repo.get("app").getVersions(), hasItems("version1", "version2"));
+            assertThat(repo.get("app").getPropertyFiles(), hasItems("file1", "file2"));
         }
     }
 }

@@ -24,7 +24,7 @@ public class ApplicationResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        ApplicationDto applicationDto = new ApplicationDto("app name", ImmutableList.of("version"));
+        ApplicationDto applicationDto = new ApplicationDto("app name", ImmutableList.of("version"), ImmutableList.of("file"));
         repo.add("app name", applicationDto);
 
         // Then
@@ -34,8 +34,8 @@ public class ApplicationResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        ApplicationDto app1 = new ApplicationDto("app1", ImmutableList.of("version"));
-        ApplicationDto app2 = new ApplicationDto("app2", ImmutableList.of("version"));
+        ApplicationDto app1 = new ApplicationDto("app1", ImmutableList.of("version"), ImmutableList.of("file"));
+        ApplicationDto app2 = new ApplicationDto("app2", ImmutableList.of("version"), ImmutableList.of("file"));
         repo.add("app1", app1);
         repo.add("app2", app2);
 

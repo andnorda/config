@@ -18,14 +18,14 @@ public class FileApplicationRepository extends FileRepository implements Applica
     @Override
     public ApplicationDto get(String appName) {
         File appDir = getAppDir(appName);
-        return new ApplicationDto(appDir.getName(), listSubDirNames(appDir));
+        return new ApplicationDto(appDir.getName(), listSubDirNames(appDir), listPropertyFileNames(appDir));
     }
 
     @Override
     public Collection<ApplicationDto> getAll() {
         List<File> files = allAppDirs();
         return files.stream()
-                .map(file -> new ApplicationDto(file.getName(), listSubDirNames(file)))
+                .map(file -> new ApplicationDto(file.getName(), listSubDirNames(file), listPropertyFileNames(file)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

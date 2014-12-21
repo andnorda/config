@@ -56,19 +56,4 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
         File instance = getSubDirWithName(version, instanceName);
         return getAllPropertyFiles(instance);
     }
-
-    private PropertyFileDto getPropertyFileWithName(File parent, String fileName) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.getName().equals(fileName + ".properties") && file.isFile()));
-        if (propertyFiles.isEmpty()) {
-            throw new NotFound();
-        }
-        return new PropertyFileDto(propertyFiles.get(0).getName().replace(".properties", ""));
-    }
-
-    private Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
-        return propertyFiles.stream()
-                .map(file -> new PropertyFileDto(file.getName().replace(".properties", "")))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
 }
