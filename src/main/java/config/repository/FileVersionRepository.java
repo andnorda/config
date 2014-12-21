@@ -17,14 +17,14 @@ public class FileVersionRepository extends FileRepository implements VersionRepo
     public VersionDto get(String appName, String versionName) {
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
-        return new VersionDto(version.getName(), listSubDirNames(version));
+        return new VersionDto(version.getName(), listSubDirNames(version), listPropertyFileNames(version));
     }
 
     @Override
     public Collection<VersionDto> getAll(String appName) {
         File app = getAppDir(appName);
         return listSubDirs(app).stream()
-                .map(file -> new VersionDto(file.getName(), listSubDirNames(file)))
+                .map(file -> new VersionDto(file.getName(), listSubDirNames(file), listPropertyFileNames(file)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

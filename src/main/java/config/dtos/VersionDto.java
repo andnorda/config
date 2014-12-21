@@ -10,4 +10,5 @@ import java.util.Collection;
 public class VersionDto {
     private final String name;
     private final Collection<String> instances;
+    private final Collection<String> propertyFiles;
 }

@@ -64,12 +64,15 @@ public class FileVersionRepositoryIT {
             new File("repo/app/version").mkdirs();
             new File("repo/app/version/instance1").mkdirs();
             new File("repo/app/version/instance2").mkdirs();
+            new File("repo/app/version/file1.properties").createNewFile();
+            new File("repo/app/version/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.getAll("app").size(), is(1));
             VersionDto version = repo.getAll("app").iterator().next();
             assertThat(version.getName(), is("version"));
             assertThat(version.getInstances(), hasItems("instance1", "instance2"));
+            assertThat(version.getPropertyFiles(), hasItems("file1", "file2"));
         }
 
         @Test
@@ -130,10 +133,13 @@ public class FileVersionRepositoryIT {
             new File("repo/app/version/instance1").mkdirs();
             new File("repo/app/version/instance2").mkdirs();
             new File("repo/app/version").createNewFile();
+            new File("repo/app/version/file1.properties").createNewFile();
+            new File("repo/app/version/file2.properties").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version").getName(), is("version"));
             assertThat(repo.get("app", "version").getInstances(), hasItems("instance1", "instance2"));
+            assertThat(repo.get("app", "version").getPropertyFiles(), hasItems("file1", "file2"));
         }
     }
 }

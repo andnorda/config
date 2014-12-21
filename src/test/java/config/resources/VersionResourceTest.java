@@ -24,7 +24,7 @@ public class VersionResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        VersionDto versionDto = new VersionDto("version name", ImmutableList.of("instance"));
+        VersionDto versionDto = new VersionDto("version name", ImmutableList.of("instance"), ImmutableList.of("file"));
         repo.add("app name", "version name", versionDto);
 
         // Then
@@ -34,8 +34,8 @@ public class VersionResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        VersionDto version1 = new VersionDto("version1", ImmutableList.of("instance"));
-        VersionDto version2 = new VersionDto("version2", ImmutableList.of("instance"));
+        VersionDto version1 = new VersionDto("version1", ImmutableList.of("instance"), ImmutableList.of("file"));
+        VersionDto version2 = new VersionDto("version2", ImmutableList.of("instance"), ImmutableList.of("file"));
         repo.add("app", "version1", version1);
         repo.add("app", "version2", version2);
 
