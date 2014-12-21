@@ -1,7 +1,7 @@
 package config.resources;
 
-import config.fakes.FakeApplicationRepository;
 import config.dtos.ApplicationDto;
+import config.fakes.FakeApplicationRepository;
 import org.junit.Before;
 import org.junit.Test;
 

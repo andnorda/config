@@ -1,9 +1,7 @@
 package config.resources;
 
 import config.dtos.InstanceDto;
-import config.dtos.VersionDto;
 import config.fakes.FakeInstanceRepository;
-import config.fakes.FakeVersionRepository;
 import org.junit.Before;
 import org.junit.Test;
 
