@@ -4,11 +4,11 @@ import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileRepository {
 
@@ -51,18 +51,32 @@ public class FileRepository {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    protected Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
+        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
+        return propertyFiles.stream()
+                .map(file -> new PropertyFileDto(file.getName().replace(".properties", ""), getProperties(file)))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     protected PropertyFileDto getPropertyFileWithName(File parent, String fileName) {
         List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.getName().equals(fileName + ".properties") && file.isFile()));
         if (propertyFiles.isEmpty()) {
             throw new NotFound();
         }
-        return new PropertyFileDto(propertyFiles.get(0).getName().replace(".properties", ""));
+        File file = propertyFiles.get(0);
+        Map<String, String> propertyMap = getProperties(file);
+        return new PropertyFileDto(file.getName().replace(".properties", ""), propertyMap);
     }
 
-    protected Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
-        return propertyFiles.stream()
-                .map(file -> new PropertyFileDto(file.getName().replace(".properties", "")))
-                .collect(Collectors.toCollection(ArrayList::new));
+    private Map<String, String> getProperties(File file) {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties.entrySet().stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(),
+                        entry -> entry.getValue().toString()));
     }
 }

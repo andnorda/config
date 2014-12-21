@@ -1,5 +1,6 @@
 package config.resources;
 
+import com.google.common.collect.ImmutableMap;
 import config.dtos.PropertyFileDto;
 import config.fakes.FakePropertyFileRepository;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsApplicationPropertyFile() throws Exception {
         // Given
-        PropertyFileDto propertyFileDto = new PropertyFileDto("file");
+        PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
         repo.addApplicationPropertyFile("app", "file", propertyFileDto);
 
         // Then
@@ -33,8 +34,8 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsAllApplicationPropertyFiles() throws Exception {
         // Given
-        PropertyFileDto propertyFile1 = new PropertyFileDto("file1");
-        PropertyFileDto propertyFile2 = new PropertyFileDto("file2");
+        PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
+        PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
         repo.addApplicationPropertyFile("app", "file1", propertyFile1);
         repo.addApplicationPropertyFile("app", "file2", propertyFile2);
 
@@ -45,7 +46,7 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsVersionPropertyFile() throws Exception {
         // Given
-        PropertyFileDto propertyFileDto = new PropertyFileDto("file");
+        PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
         repo.addVersionPropertyFile("app", "version", "file", propertyFileDto);
 
         // Then
@@ -55,8 +56,8 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsAllVersionPropertyFiles() throws Exception {
         // Given
-        PropertyFileDto propertyFile1 = new PropertyFileDto("file1");
-        PropertyFileDto propertyFile2 = new PropertyFileDto("file2");
+        PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
+        PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
         repo.addVersionPropertyFile("app", "version", "file1", propertyFile1);
         repo.addVersionPropertyFile("app", "version", "file2", propertyFile2);
 
@@ -67,7 +68,7 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsInstancePropertyFile() throws Exception {
         // Given
-        PropertyFileDto propertyFileDto = new PropertyFileDto("file");
+        PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
         repo.addInstancePropertyFile("app", "version", "instance", "file", propertyFileDto);
 
         // Then
@@ -77,8 +78,8 @@ public class PropertyFileResourceTest {
     @Test
     public void returnsAllInstancePropertyFiles() throws Exception {
         // Given
-        PropertyFileDto propertyFile1 = new PropertyFileDto("file1");
-        PropertyFileDto propertyFile2 = new PropertyFileDto("file2");
+        PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
+        PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
         repo.addInstancePropertyFile("app", "version", "instance", "file1", propertyFile1);
         repo.addInstancePropertyFile("app", "version", "instance", "file2", propertyFile2);
 

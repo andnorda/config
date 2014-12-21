@@ -1,5 +1,6 @@
 package config.repository;
 
+import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -9,9 +10,11 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.PrintWriter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(Enclosed.class)
@@ -60,11 +63,15 @@ public class FileApplicationPropertyFileRepositoryIT {
         public void returnsPropertyFile() throws Exception {
             // Given
             new File("repo/app").mkdir();
-            new File("repo/app/file.properties").createNewFile();
+            PrintWriter writer = new PrintWriter("repo/app/file.properties", "UTF-8");
+            writer.println("key=value");
+            writer.close();
             new File("repo/app/file.properties").mkdir();
 
             // Then
             assertThat(repo.getApplicationPropertyFile("app", "file").getName(), is("file"));
+            assertThat(repo.getApplicationPropertyFile("app", "file").getProperties().keySet(), hasItems("key"));
+            assertThat(repo.getApplicationPropertyFile("app", "file").getProperties().values(), hasItems("value"));
         }
     }
 
@@ -102,13 +109,18 @@ public class FileApplicationPropertyFileRepositoryIT {
         public void returnsCollectionWithOneFile() throws Exception {
             // Given
             new File("repo/app").mkdir();
-            new File("repo/app/file.properties").createNewFile();
+            PrintWriter writer = new PrintWriter("repo/app/file.properties", "UTF-8");
+            writer.println("key=value");
+            writer.close();
             new File("repo/app/file.nope").createNewFile();
             new File("repo/app/notAFile.properties").mkdir();
 
             // Then
             assertThat(repo.getAllApplicationPropertyFiles("app").size(), is(1));
-            assertThat(repo.getAllApplicationPropertyFiles("app").iterator().next().getName(), is("file"));
+            PropertyFileDto propertyFileDto = repo.getAllApplicationPropertyFiles("app").iterator().next();
+            assertThat(propertyFileDto.getName(), is("file"));
+            assertThat(propertyFileDto.getProperties().keySet(), hasItems("key"));
+            assertThat(propertyFileDto.getProperties().values(), hasItems("value"));
         }
     }
 }
