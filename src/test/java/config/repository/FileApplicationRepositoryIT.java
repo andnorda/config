@@ -1,5 +1,6 @@
 package config.repository;
 
+import config.dtos.ApplicationDto;
 import config.exceptions.NotFound;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -12,6 +13,7 @@ import java.io.File;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Enclosed.class)
@@ -42,10 +44,14 @@ public class FileApplicationRepositoryIT {
         public void returnsCollectionWithOneApplication_GivenOneDir() throws Exception {
             // Given
             new File("repo/app").mkdir();
+            new File("repo/app/version1").mkdir();
+            new File("repo/app/version2").mkdir();
 
             // Then
             assertThat(repo.getAll().size(), is(1));
-            assertThat(repo.getAll().iterator().next().getName(), is("app"));
+            ApplicationDto application = repo.getAll().iterator().next();
+            assertThat(application.getName(), is("app"));
+            assertThat(application.getVersions(), hasItems("version1", "version2"));
         }
 
         @Test
@@ -80,16 +86,6 @@ public class FileApplicationRepositoryIT {
             repo.get("app");
         }
 
-        @Test
-        public void returnApplication() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-            new File("repo/app").createNewFile();
-
-            // Then
-            assertThat(repo.get("app").getName(), is("app"));
-        }
-
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNonDirMatch() throws Exception {
             // Given
@@ -97,6 +93,19 @@ public class FileApplicationRepositoryIT {
 
             // Then
             repo.get("app");
+        }
+
+        @Test
+        public void returnApplication() throws Exception {
+            // Given
+            new File("repo/app").mkdir();
+            new File("repo/app/version1").mkdir();
+            new File("repo/app/version2").mkdir();
+            new File("repo/app").createNewFile();
+
+            // Then
+            assertThat(repo.get("app").getName(), is("app"));
+            assertThat(repo.get("app").getVersions(), hasItems("version1", "version2"));
         }
     }
 }

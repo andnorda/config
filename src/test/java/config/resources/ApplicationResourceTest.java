@@ -1,5 +1,6 @@
 package config.resources;
 
+import com.google.common.collect.ImmutableList;
 import config.dtos.ApplicationDto;
 import config.fakes.FakeApplicationRepository;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class ApplicationResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        ApplicationDto applicationDto = new ApplicationDto("app name");
+        ApplicationDto applicationDto = new ApplicationDto("app name", ImmutableList.of("version"));
         repo.add("app name", applicationDto);
 
         // Then
@@ -33,8 +34,8 @@ public class ApplicationResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        ApplicationDto app1 = new ApplicationDto("app1");
-        ApplicationDto app2 = new ApplicationDto("app2");
+        ApplicationDto app1 = new ApplicationDto("app1", ImmutableList.of("version"));
+        ApplicationDto app2 = new ApplicationDto("app2", ImmutableList.of("version"));
         repo.add("app1", app1);
         repo.add("app2", app2);
 
