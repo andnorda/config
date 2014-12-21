@@ -2,6 +2,7 @@ package config.repository;
 
 import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
+import config.repository.impl.FilePropertyFileRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +39,7 @@ public class FileApplicationPropertyFileRepositoryIT {
 
         @Test(expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getApplicationPropertyFile("app", "file");
+            repo.get("app", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -47,7 +48,7 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.getApplicationPropertyFile("app", "file");
+            repo.get("app", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -56,7 +57,7 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app/file.properties").mkdirs();
 
             // When
-            repo.getApplicationPropertyFile("app", "file");
+            repo.get("app", "file");
         }
 
         @Test
@@ -69,9 +70,9 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app/file.properties").mkdir();
 
             // Then
-            assertThat(repo.getApplicationPropertyFile("app", "file").getName(), is("file"));
-            assertThat(repo.getApplicationPropertyFile("app", "file").getProperties().keySet(), hasItems("key"));
-            assertThat(repo.getApplicationPropertyFile("app", "file").getProperties().values(), hasItems("value"));
+            assertThat(repo.get("app", "file").getName(), is("file"));
+            assertThat(repo.get("app", "file").getProperties().keySet(), hasItems("key"));
+            assertThat(repo.get("app", "file").getProperties().values(), hasItems("value"));
         }
     }
 
@@ -93,7 +94,7 @@ public class FileApplicationPropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getAllApplicationPropertyFiles("app");
+            repo.getAll("app");
         }
 
         @Test
@@ -102,7 +103,7 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // Then
-            assertThat(repo.getAllApplicationPropertyFiles("app"), is(empty()));
+            assertThat(repo.getAll("app"), is(empty()));
         }
 
         @Test
@@ -116,8 +117,8 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app/notAFile.properties").mkdir();
 
             // Then
-            assertThat(repo.getAllApplicationPropertyFiles("app").size(), is(1));
-            PropertyFileDto propertyFileDto = repo.getAllApplicationPropertyFiles("app").iterator().next();
+            assertThat(repo.getAll("app").size(), is(1));
+            PropertyFileDto propertyFileDto = repo.getAll("app").iterator().next();
             assertThat(propertyFileDto.getName(), is("file"));
             assertThat(propertyFileDto.getProperties().keySet(), hasItems("key"));
             assertThat(propertyFileDto.getProperties().values(), hasItems("value"));

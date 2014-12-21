@@ -1,6 +1,7 @@
-package config.repository;
+package config.repository.impl;
 
 import config.dtos.VersionDto;
+import config.repository.VersionRepository;
 
 import java.io.File;
 import java.util.ArrayList;

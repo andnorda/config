@@ -2,8 +2,8 @@ package config.resources;
 
 import config.dtos.PropertyFileDto;
 import config.dtos.VersionDto;
-import config.repository.PropertyFileRepository;
 import config.repository.VersionRepository;
+import config.servies.PropertyFileService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,11 +16,11 @@ import java.util.Collection;
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
     private final VersionRepository versionRepository;
-    private final PropertyFileRepository propertyFileRepository;
+    private final PropertyFileService propertyFileService;
 
-    public VersionResource(VersionRepository versionRepository, PropertyFileRepository propertyFileRepository) {
+    public VersionResource(VersionRepository versionRepository, PropertyFileService propertyFileService) {
         this.versionRepository = versionRepository;
-        this.propertyFileRepository = propertyFileRepository;
+        this.propertyFileService = propertyFileService;
     }
 
     @GET
@@ -42,7 +42,7 @@ public class VersionResource {
     public Collection<PropertyFileDto> getAllVersionPropertyFiles(
             @PathParam("application") String appName,
             @PathParam("version") String versionName) {
-        return propertyFileRepository.getAllVersionPropertyFiles(appName, versionName);
+        return propertyFileService.getAll(appName, versionName);
     }
 
     @GET
@@ -51,6 +51,6 @@ public class VersionResource {
             @PathParam("application") String appName,
             @PathParam("version") String versionName,
             @PathParam("file") String fileName) {
-        return propertyFileRepository.getVersionPropertyFile(appName, versionName, fileName);
+        return propertyFileService.get(appName, versionName, fileName);
     }
 }

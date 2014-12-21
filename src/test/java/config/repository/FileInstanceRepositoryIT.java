@@ -2,6 +2,7 @@ package config.repository;
 
 import config.dtos.InstanceDto;
 import config.exceptions.NotFound;
+import config.repository.impl.FileInstanceRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;

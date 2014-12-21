@@ -1,6 +1,7 @@
 package config.repository;
 
 import config.exceptions.NotFound;
+import config.repository.impl.FilePropertyFileRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class FileVersionPropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getVersionPropertyFile("app", "version", "file");
+            repo.get("app", "version", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -44,7 +45,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.getVersionPropertyFile("app", "version", "file");
+            repo.get("app", "version", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -53,7 +54,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // When
-            repo.getVersionPropertyFile("app", "version", "file");
+            repo.get("app", "version", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -62,7 +63,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version/file.properties").mkdirs();
 
             // When
-            repo.getVersionPropertyFile("app", "version", "file");
+            repo.get("app", "version", "file");
         }
 
         @Test
@@ -73,7 +74,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version/file.properties").mkdir();
 
             // Then
-            assertThat(repo.getVersionPropertyFile("app", "version", "file").getName(), is("file"));
+            assertThat(repo.get("app", "version", "file").getName(), is("file"));
         }
     }
 
@@ -95,7 +96,7 @@ public class FileVersionPropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getAllVersionPropertyFiles("app", "version");
+            repo.getAll("app", "version");
         }
 
         @Test (expected = NotFound.class)
@@ -104,7 +105,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // Then
-            repo.getAllVersionPropertyFiles("app", "version");
+            repo.getAll("app", "version");
         }
 
         @Test
@@ -113,7 +114,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // Then
-            assertThat(repo.getAllVersionPropertyFiles("app", "version"), is(empty()));
+            assertThat(repo.getAll("app", "version"), is(empty()));
         }
 
         @Test
@@ -125,8 +126,8 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version/notAFile.properties").mkdir();
 
             // Then
-            assertThat(repo.getAllVersionPropertyFiles("app", "version").size(), is(1));
-            assertThat(repo.getAllVersionPropertyFiles("app", "version").iterator().next().getName(), is("file"));
+            assertThat(repo.getAll("app", "version").size(), is(1));
+            assertThat(repo.getAll("app", "version").iterator().next().getName(), is("file"));
         }
     }
 }

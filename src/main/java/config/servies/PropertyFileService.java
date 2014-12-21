@@ -1,13 +1,13 @@
-package config.repository;
+package config.servies;
 
 import config.dtos.PropertyFileDto;
 
 import java.util.Collection;
 
-public interface PropertyFileRepository {
+public interface PropertyFileService {
     Collection<PropertyFileDto> getAll(String appName);
     PropertyFileDto get(String appName, String fileName);
-    void update(String appName, String fileName, PropertyFileDto propertyFileDto);
+    void changeProperty(String appName, String fileName, String propertyName, String propertyValue);
 
     Collection<PropertyFileDto> getAll(String appName, String versionName);
     PropertyFileDto get(String appName, String versionName, String fileName);

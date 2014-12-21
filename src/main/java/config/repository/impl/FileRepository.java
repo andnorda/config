@@ -1,4 +1,4 @@
-package config.repository;
+package config.repository.impl;
 
 import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;

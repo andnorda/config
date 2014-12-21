@@ -14,12 +14,17 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public PropertyFileDto getApplicationPropertyFile(String appName, String fileName) {
-        return applicationPropertyFiles.get(appName + fileName);
+    public PropertyFileDto get(String appName, String fileName) {
+        return new PropertyFileDto(fileName, new HashMap<>(applicationPropertyFiles.get(appName + fileName).getProperties()));
     }
 
     @Override
-    public Collection<PropertyFileDto> getAllApplicationPropertyFiles(String appName) {
+    public void update(String appName, String fileName, PropertyFileDto propertyFileDto) {
+        applicationPropertyFiles.put(appName + fileName, propertyFileDto);
+    }
+
+    @Override
+    public Collection<PropertyFileDto> getAll(String appName) {
         return applicationPropertyFiles.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(appName))
                 .map(Map.Entry::getValue)
@@ -33,12 +38,12 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public PropertyFileDto getVersionPropertyFile(String appName, String versionName, String fileName) {
+    public PropertyFileDto get(String appName, String versionName, String fileName) {
         return versionPropertyFiles.get(appName + versionName + fileName);
     }
 
     @Override
-    public Collection<PropertyFileDto> getAllVersionPropertyFiles(String appName, String versionName) {
+    public Collection<PropertyFileDto> getAll(String appName, String versionName) {
         return versionPropertyFiles.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(appName + versionName))
                 .map(Map.Entry::getValue)
@@ -52,12 +57,12 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public PropertyFileDto getInstancePropertyFiles(String appName, String versionName, String instanceName, String fileName) {
+    public PropertyFileDto get(String appName, String versionName, String instanceName, String fileName) {
         return instancePropertyFiles.get(appName + versionName + instanceName + fileName);
     }
 
     @Override
-    public List<PropertyFileDto> getAllInstancePropertyFiles(String appName, String versionName, String instanceName) {
+    public List<PropertyFileDto> getAll(String appName, String versionName, String instanceName) {
         return instancePropertyFiles.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(appName + versionName + instanceName))
                 .map(Map.Entry::getValue)

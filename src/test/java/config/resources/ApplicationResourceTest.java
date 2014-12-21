@@ -6,6 +6,7 @@ import config.dtos.ApplicationDto;
 import config.dtos.PropertyFileDto;
 import config.fakes.FakeApplicationRepository;
 import config.fakes.FakePropertyFileRepository;
+import config.servies.PropertyFileServiceImpl;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class ApplicationResourceTest {
     public void setUp() throws Exception {
         applicationRepository = new FakeApplicationRepository();
         propertyFileRepository = new FakePropertyFileRepository();
-        resource = new ApplicationResource(applicationRepository, propertyFileRepository);
+        resource = new ApplicationResource(applicationRepository, new PropertyFileServiceImpl(propertyFileRepository));
     }
 
     @Test
@@ -58,7 +59,7 @@ public class ApplicationResourceTest {
         propertyFileRepository.addApplicationPropertyFile("app", "file", propertyFileDto);
 
         // Then
-        assertThat(resource.getApplicationPropertyFile("app", "file"), Is.is(propertyFileDto));
+        assertThat(resource.getApplicationPropertyFile("app", "file"), is(propertyFileDto));
     }
 
     @Test
@@ -70,20 +71,18 @@ public class ApplicationResourceTest {
         propertyFileRepository.addApplicationPropertyFile("app", "file2", propertyFile2);
 
         // Then
-        assertThat(resource.getAllApplicationPropertyFiles("app"), IsCollectionContaining.hasItems(propertyFile1, propertyFile2));
+        assertThat(resource.getAllApplicationPropertyFiles("app"), hasItems(propertyFile1, propertyFile2));
     }
 
     @Test
-    @Ignore
     public void changesPropertyValue() throws Exception {
         // Given
-        PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "old"));
-        propertyFileRepository.addApplicationPropertyFile("app", "file", propertyFileDto);
+        propertyFileRepository.addApplicationPropertyFile("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
 
         // When
         resource.changeProperty("app", "file", "key", "new");
 
         // Then
-        assertThat(resource.getApplicationPropertyFile("app", "file").getProperties().values(), hasItems("new"));
+        assertThat(resource.getApplicationPropertyFile("app", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
     }
 }

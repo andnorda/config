@@ -3,7 +3,7 @@ package config.resources;
 import config.dtos.InstanceDto;
 import config.dtos.PropertyFileDto;
 import config.repository.InstanceRepository;
-import config.repository.PropertyFileRepository;
+import config.servies.PropertyFileService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,11 +16,11 @@ import java.util.Collection;
 @Produces(MediaType.APPLICATION_JSON)
 public class InstanceResource {
     private final InstanceRepository instanceRepository;
-    private final PropertyFileRepository propertyFileRepository;
+    private final PropertyFileService propertyFileService;
 
-    public InstanceResource(InstanceRepository instanceRepository, PropertyFileRepository propertyFileRepository) {
+    public InstanceResource(InstanceRepository instanceRepository, PropertyFileService propertyFileService) {
         this.instanceRepository = instanceRepository;
-        this.propertyFileRepository = propertyFileRepository;
+        this.propertyFileService = propertyFileService;
     }
 
     @GET
@@ -45,7 +45,7 @@ public class InstanceResource {
             @PathParam("application") String appName,
             @PathParam("version") String versionName,
             @PathParam("instance") String instanceName) {
-        return propertyFileRepository.getAllInstancePropertyFiles(appName, versionName, instanceName);
+        return propertyFileService.getAll(appName, versionName, instanceName);
     }
 
     @GET
@@ -55,6 +55,6 @@ public class InstanceResource {
             @PathParam("version") String versionName,
             @PathParam("instance") String instanceName,
             @PathParam("file") String fileName) {
-        return propertyFileRepository.getInstancePropertyFiles(appName, versionName, instanceName, fileName);
+        return propertyFileService.get(appName, versionName, instanceName, fileName);
     }
 }

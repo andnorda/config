@@ -6,6 +6,7 @@ import config.dtos.InstanceDto;
 import config.dtos.PropertyFileDto;
 import config.fakes.FakeInstanceRepository;
 import config.fakes.FakePropertyFileRepository;
+import config.servies.PropertyFileServiceImpl;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class InstanceResourceTest {
     public void setUp() throws Exception {
         instanceRepository = new FakeInstanceRepository();
         propertyFileRepository = new FakePropertyFileRepository();
-        resource = new InstanceResource(instanceRepository, propertyFileRepository);
+        resource = new InstanceResource(instanceRepository, new PropertyFileServiceImpl(propertyFileRepository));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package config.repository;
 
 import config.exceptions.NotFound;
+import config.repository.impl.FilePropertyFileRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class FileInstancePropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getInstancePropertyFiles("app", "version", "instance", "file");
+            repo.get("app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -44,7 +45,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.getInstancePropertyFiles("app", "version", "instance", "file");
+            repo.get("app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -53,7 +54,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // When
-            repo.getInstancePropertyFiles("app", "version", "instance", "file");
+            repo.get("app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -62,7 +63,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance").mkdirs();
 
             // When
-            repo.getInstancePropertyFiles("app", "version", "instance", "file");
+            repo.get("app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -71,7 +72,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance/file.properties").mkdirs();
 
             // When
-            repo.getInstancePropertyFiles("app", "version", "instance", "file");
+            repo.get("app", "version", "instance", "file");
         }
 
         @Test
@@ -82,7 +83,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance/file.properties").mkdir();
 
             // Then
-            assertThat(repo.getInstancePropertyFiles("app", "version", "instance", "file").getName(), is("file"));
+            assertThat(repo.get("app", "version", "instance", "file").getName(), is("file"));
         }
     }
 
@@ -104,7 +105,7 @@ public class FileInstancePropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getAllInstancePropertyFiles("app", "version", "instance");
+            repo.getAll("app", "version", "instance");
         }
 
         @Test (expected = NotFound.class)
@@ -113,7 +114,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // Then
-            repo.getAllInstancePropertyFiles("app", "version", "instance");
+            repo.getAll("app", "version", "instance");
         }
 
         @Test (expected = NotFound.class)
@@ -122,7 +123,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // Then
-            repo.getAllInstancePropertyFiles("app", "version", "instance");
+            repo.getAll("app", "version", "instance");
         }
 
         @Test
@@ -131,7 +132,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance").mkdirs();
 
             // Then
-            assertThat(repo.getAllInstancePropertyFiles("app", "version", "instance"), is(empty()));
+            assertThat(repo.getAll("app", "version", "instance"), is(empty()));
         }
 
         @Test
@@ -143,8 +144,8 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance/notAFile.properties").mkdir();
 
             // Then
-            assertThat(repo.getAllInstancePropertyFiles("app", "version", "instance").size(), is(1));
-            assertThat(repo.getAllInstancePropertyFiles("app", "version", "instance").iterator().next().getName(), is("file"));
+            assertThat(repo.getAll("app", "version", "instance").size(), is(1));
+            assertThat(repo.getAll("app", "version", "instance").iterator().next().getName(), is("file"));
         }
     }
 }

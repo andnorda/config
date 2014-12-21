@@ -6,6 +6,7 @@ import config.dtos.PropertyFileDto;
 import config.dtos.VersionDto;
 import config.fakes.FakePropertyFileRepository;
 import config.fakes.FakeVersionRepository;
+import config.servies.PropertyFileServiceImpl;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class VersionResourceTest {
     public void setUp() throws Exception {
         versionRepository = new FakeVersionRepository();
         propertyFileRepository = new FakePropertyFileRepository();
-        resource = new VersionResource(versionRepository, propertyFileRepository);
+        resource = new VersionResource(versionRepository, new PropertyFileServiceImpl(propertyFileRepository));
     }
 
     @Test

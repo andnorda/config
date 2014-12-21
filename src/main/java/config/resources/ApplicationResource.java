@@ -3,7 +3,7 @@ package config.resources;
 import config.dtos.ApplicationDto;
 import config.dtos.PropertyFileDto;
 import config.repository.ApplicationRepository;
-import config.repository.PropertyFileRepository;
+import config.servies.PropertyFileService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,11 +16,11 @@ import java.util.Collection;
 @Produces(MediaType.APPLICATION_JSON)
 public class ApplicationResource {
     private final ApplicationRepository applicationRepository;
-    private final PropertyFileRepository propertyFileRepository;
+    private final PropertyFileService propertyFileService;
 
-    public ApplicationResource(ApplicationRepository applicationRepository, PropertyFileRepository propertyFileRepository1) {
+    public ApplicationResource(ApplicationRepository applicationRepository, PropertyFileService propertyFileService) {
         this.applicationRepository = applicationRepository;
-        propertyFileRepository = propertyFileRepository1;
+        this.propertyFileService = propertyFileService;
     }
 
     @GET
@@ -39,7 +39,7 @@ public class ApplicationResource {
     @Path("/{application}/files")
     public Collection<PropertyFileDto> getAllApplicationPropertyFiles(
             @PathParam("application") String appName) {
-        return propertyFileRepository.getAllApplicationPropertyFiles(appName);
+        return propertyFileService.getAll(appName);
     }
 
     @GET
@@ -47,9 +47,10 @@ public class ApplicationResource {
     public PropertyFileDto getApplicationPropertyFile(
             @PathParam("application") String appName,
             @PathParam("file") String fileName) {
-        return propertyFileRepository.getApplicationPropertyFile(appName, fileName);
+        return propertyFileService.get(appName, fileName);
     }
 
     public void changeProperty(String appName, String fileName, String propertyName, String propertyValue) {
+        propertyFileService.changeProperty(appName, fileName, propertyName, propertyValue);
     }
 }
