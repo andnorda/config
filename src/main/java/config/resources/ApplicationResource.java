@@ -5,10 +5,7 @@ import config.dtos.PropertyFileDto;
 import config.repository.ApplicationRepository;
 import config.servies.PropertyFileService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 
@@ -50,7 +47,13 @@ public class ApplicationResource {
         return propertyFileService.get(appName, fileName);
     }
 
-    public void changeProperty(String appName, String fileName, String propertyName, String propertyValue) {
+    @POST
+    @Path("/{application}/files/{file}/properties/{property}")
+    public void changeProperty(
+            @PathParam("application") String appName,
+            @PathParam("file") String fileName,
+            @PathParam("property") String propertyName,
+            @QueryParam("value") String propertyValue) {
         propertyFileService.changeProperty(appName, fileName, propertyName, propertyValue);
     }
 }
