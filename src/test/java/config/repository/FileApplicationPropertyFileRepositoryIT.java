@@ -1,5 +1,6 @@
 package config.repository;
 
+import com.google.common.collect.ImmutableMap;
 import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
 import config.repository.impl.FilePropertyFileRepository;
@@ -13,10 +14,10 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.io.PrintWriter;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.core.Is.is;
 
 @RunWith(Enclosed.class)
 public class FileApplicationPropertyFileRepositoryIT {
@@ -122,6 +123,52 @@ public class FileApplicationPropertyFileRepositoryIT {
             assertThat(propertyFileDto.getName(), is("file"));
             assertThat(propertyFileDto.getProperties().keySet(), hasItems("key"));
             assertThat(propertyFileDto.getProperties().values(), hasItems("value"));
+        }
+    }
+
+    public static class Update {
+        private FilePropertyFileRepository repo;
+        private File baseDir;
+
+        @Before
+        public void setUp() throws Exception {
+            baseDir = new File("repo");
+            baseDir.mkdir();
+            repo = new FilePropertyFileRepository(baseDir);
+        }
+
+        @After
+        public void tearDown() throws Exception {
+            FileUtils.deleteDirectory(baseDir);
+        }
+
+        @Test (expected = NotFound.class)
+        public void throwsNotFound_GivenNoApp() throws Exception {
+            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+        }
+
+        @Test (expected = NotFound.class)
+        public void throwsNotFound_GivenNoFile() throws Exception {
+            // Given
+            new File("repo/app").mkdir();
+
+            // When
+            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+        }
+
+        @Test
+        public void updatesProperty() throws Exception {
+            // Given
+            new File("repo/app").mkdir();
+            PrintWriter writer = new PrintWriter("repo/app/file.properties", "UTF-8");
+            writer.println("key=old");
+            writer.close();
+
+            // When
+            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+
+            // Then
+            assertThat(repo.get("app", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));
         }
     }
 }

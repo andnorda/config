@@ -1,10 +1,15 @@
 package config.repository.impl;
 
 import config.dtos.PropertyFileDto;
+import config.exceptions.NotFound;
 import config.repository.PropertyFileRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
+import java.util.Map;
 
 public class FilePropertyFileRepository extends FileRepository implements PropertyFileRepository {
     public FilePropertyFileRepository(File baseDir) {
@@ -19,7 +24,18 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
 
     @Override
     public void update(String appName, String fileName, PropertyFileDto propertyFileDto) {
-
+        File app = getAppDir(appName);
+        getPropertyFileWithName(app, fileName);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(app.getPath() + "/" + fileName + ".properties", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        for (Map.Entry entry : propertyFileDto.getProperties().entrySet()) {
+            writer.println(entry.getKey() + "=" + entry.getValue());
+        }
+        writer.close();
     }
 
     @Override
@@ -37,7 +53,19 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
 
     @Override
     public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
-
+        File app = getAppDir(appName);
+        File version = getSubDirWithName(app, versionName);
+        getPropertyFileWithName(version, fileName);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(version.getPath() + "/" + fileName + ".properties", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        for (Map.Entry entry : propertyFileDto.getProperties().entrySet()) {
+            writer.println(entry.getKey() + "=" + entry.getValue());
+        }
+        writer.close();
     }
 
     @Override
@@ -57,7 +85,20 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
 
     @Override
     public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
-
+        File app = getAppDir(appName);
+        File version = getSubDirWithName(app, versionName);
+        File instance = getSubDirWithName(version, instanceName);
+        getPropertyFileWithName(instance, fileName);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(instance.getPath() + "/" + fileName + ".properties", "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        for (Map.Entry entry : propertyFileDto.getProperties().entrySet()) {
+            writer.println(entry.getKey() + "=" + entry.getValue());
+        }
+        writer.close();
     }
 
     @Override
