@@ -4,7 +4,6 @@ import config.dtos.PropertyFileDto;
 import config.repository.PropertyFileRepository;
 
 import java.util.Collection;
-import java.util.List;
 
 public class PropertyFileResource {
     private PropertyFileRepository repository;
@@ -33,7 +32,7 @@ public class PropertyFileResource {
         return repository.getInstancePropertyFiles(appName, versionName, instanceName, fileName);
     }
 
-    public List<PropertyFileDto> getAllInstancePropertyFiles(String appName, String versionName, String instanceName) {
+    public Collection<PropertyFileDto> getAllInstancePropertyFiles(String appName, String versionName, String instanceName) {
         return repository.getAllInstancePropertyFiles(appName, versionName, instanceName);
     }
 }

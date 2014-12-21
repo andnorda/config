@@ -41,21 +41,20 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
         return getAllPropertyFiles(version);
     }
 
-    private Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
-        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
-        return propertyFiles.stream()
-                .map(file -> new PropertyFileDto(file.getName().replace(".properties", "")))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
     @Override
     public PropertyFileDto getInstancePropertyFiles(String appName, String versionName, String instanceName, String fileName) {
-        return null;
+        File app = getAppDir(appName);
+        File version = getSubDirWithName(app, versionName);
+        File instance = getSubDirWithName(version, instanceName);
+        return getPropertyFileWithName(instance, fileName);
     }
 
     @Override
-    public List<PropertyFileDto> getAllInstancePropertyFiles(String appName, String versionName, String instanceName) {
-        return null;
+    public Collection<PropertyFileDto> getAllInstancePropertyFiles(String appName, String versionName, String instanceName) {
+        File app = getAppDir(appName);
+        File version = getSubDirWithName(app, versionName);
+        File instance = getSubDirWithName(version, instanceName);
+        return getAllPropertyFiles(instance);
     }
 
     private PropertyFileDto getPropertyFileWithName(File parent, String fileName) {
@@ -64,5 +63,12 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
             throw new NotFound();
         }
         return new PropertyFileDto(propertyFiles.get(0).getName().replace(".properties", ""));
+    }
+
+    private Collection<PropertyFileDto> getAllPropertyFiles(File parent) {
+        List<File> propertyFiles = Arrays.asList(parent.listFiles(file -> file.isFile() && file.getName().endsWith(".properties")));
+        return propertyFiles.stream()
+                .map(file -> new PropertyFileDto(file.getName().replace(".properties", "")))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
