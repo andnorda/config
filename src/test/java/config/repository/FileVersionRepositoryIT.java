@@ -1,5 +1,6 @@
 package config.repository;
 
+import config.dtos.VersionDto;
 import config.exceptions.NotFound;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -60,10 +62,14 @@ public class FileVersionRepositoryIT {
         public void returnsCollectionWithOneVersion() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
+            new File("repo/app/version/instance1").mkdirs();
+            new File("repo/app/version/instance2").mkdirs();
 
             // Then
             assertThat(repo.getAll("app").size(), is(1));
-            assertThat(repo.getAll("app").iterator().next().getName(), is("version"));
+            VersionDto version = repo.getAll("app").iterator().next();
+            assertThat(version.getName(), is("version"));
+            assertThat(version.getInstances(), hasItems("instance1", "instance2"));
         }
 
         @Test
@@ -121,10 +127,13 @@ public class FileVersionRepositoryIT {
         public void returnsVersion() throws Exception {
             // Given
             new File("repo/app/version").mkdirs();
+            new File("repo/app/version/instance1").mkdirs();
+            new File("repo/app/version/instance2").mkdirs();
             new File("repo/app/version").createNewFile();
 
             // Then
             assertThat(repo.get("app", "version").getName(), is("version"));
+            assertThat(repo.get("app", "version").getInstances(), hasItems("instance1", "instance2"));
         }
     }
 }

@@ -1,5 +1,6 @@
 package config.resources;
 
+import com.google.common.collect.ImmutableList;
 import config.dtos.VersionDto;
 import config.fakes.FakeVersionRepository;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class VersionResourceTest {
     @Test
     public void getOne() throws Exception {
         // Given
-        VersionDto versionDto = new VersionDto("version name");
+        VersionDto versionDto = new VersionDto("version name", ImmutableList.of("instance"));
         repo.add("app name", "version name", versionDto);
 
         // Then
@@ -33,8 +34,8 @@ public class VersionResourceTest {
     @Test
     public void getAll() throws Exception {
         // Given
-        VersionDto version1 = new VersionDto("version1");
-        VersionDto version2 = new VersionDto("version2");
+        VersionDto version1 = new VersionDto("version1", ImmutableList.of("instance"));
+        VersionDto version2 = new VersionDto("version2", ImmutableList.of("instance"));
         repo.add("app", "version1", version1);
         repo.add("app", "version2", version2);
 

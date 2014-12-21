@@ -3,8 +3,10 @@ package config.repository;
 import config.exceptions.NotFound;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileRepository {
 
@@ -33,5 +35,11 @@ public class FileRepository {
     protected List<File> listSubDirs(File parent) {
         File[] listFiles = parent.listFiles(File::isDirectory);
         return Arrays.asList(listFiles);
+    }
+
+    protected ArrayList<String> listSubDirNames(File appDir) {
+        return listSubDirs(appDir).stream()
+                .map(file -> file.getName())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
