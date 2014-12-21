@@ -1,7 +1,6 @@
-package config.integration;
+package config.repository;
 
-import config.repository.FileVersionRepository;
-import config.resources.VersionResource;
+import config.exceptions.NotFound;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -13,13 +12,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 
-public class VersionIT {
+public class FileVersionRepositoryIT {
 
-    private VersionResource resource;
+    private FileVersionRepository repo;
 
     @Before
     public void setUp() throws Exception {
-        resource = new VersionResource(new FileVersionRepository(new File("repo")));
+        repo = new FileVersionRepository(new File("repo"));
     }
 
     @After
@@ -27,9 +26,17 @@ public class VersionIT {
         FileUtils.deleteDirectory(new File("repo"));
     }
 
+    @Test (expected = NotFound.class)
+    public void throwsNotFound_GivenNoApp() throws Exception {
+        repo.getAll("app");
+    }
+
     @Test
     public void returnsEmptyCollection() throws Exception {
+        // Given
         new File("repo/app").mkdir();
-        assertThat(resource.getAll("app"), is(empty()));
+
+        // Then
+        assertThat(repo.getAll("app"), is(empty()));
     }
 }

@@ -1,11 +1,12 @@
 package config.repository;
 
 import config.dtos.ApplicationDto;
+import config.exceptions.NotFound;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,16 +18,21 @@ public class FileApplicationRepository implements ApplicationRepository {
     }
 
     @Override
-    public ApplicationDto get(String name) {
-        return null;
+    public ApplicationDto get(String appName) {
+        File[] listFiles = baseDir.listFiles(file -> file.getName().equals(appName) && file.isDirectory());
+        List<File> files = Arrays.asList(listFiles);
+        if (files.isEmpty()) {
+            throw new NotFound();
+        }
+        return new ApplicationDto(files.get(0).getName());
     }
 
     @Override
     public Collection<ApplicationDto> getAll() {
-        List<File> files = Arrays.asList(baseDir.listFiles());
+        File[] listFiles = baseDir.listFiles(File::isDirectory);
+        List<File> files = Arrays.asList(listFiles);
         return files.stream()
-                .filter(File::isDirectory)
                 .map(file -> new ApplicationDto(file.getName()))
-                .collect(Collectors.toCollection(HashSet::new));
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
