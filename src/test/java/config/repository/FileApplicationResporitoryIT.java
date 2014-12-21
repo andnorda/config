@@ -19,8 +19,9 @@ public class FileApplicationResporitoryIT {
 
     @Before
     public void setUp() throws Exception {
-        new File("repo").mkdir();
-        repo = new FileApplicationRepository(new File("repo"));
+        File baseDir = new File("repo");
+        baseDir.mkdir();
+        repo = new FileApplicationRepository(baseDir);
     }
 
     @After
