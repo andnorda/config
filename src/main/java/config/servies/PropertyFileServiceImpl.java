@@ -1,6 +1,7 @@
 package config.servies;
 
 import config.dtos.PropertyFileDto;
+import config.exceptions.NotFound;
 import config.repository.PropertyFileRepository;
 
 import java.util.Collection;
@@ -24,10 +25,13 @@ public class PropertyFileServiceImpl implements PropertyFileService {
     }
 
     @Override
-    public void changeProperty(String appName, String fileName, String propertyName, String propertyValue) {
+    public void changeProperty(String appName, String fileName, String propertyKey, String propertyValue) {
         PropertyFileDto propertyFileDto = repo.get(appName, fileName);
         Map<String, String> properties = propertyFileDto.getProperties();
-        properties.put(propertyName, propertyValue);
+        if (!properties.containsKey(propertyKey)) {
+            throw new NotFound();
+        }
+        properties.put(propertyKey, propertyValue);
         repo.update(appName, fileName, new PropertyFileDto(propertyFileDto.getName(), properties));
     }
 
