@@ -143,7 +143,7 @@ public class FileApplicationPropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -152,7 +152,7 @@ public class FileApplicationPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "file");
         }
 
         @Test
@@ -164,7 +164,7 @@ public class FileApplicationPropertyFileRepositoryIT {
             writer.close();
 
             // When
-            repo.update("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "file");
 
             // Then
             assertThat(repo.get("app", "file"), is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));

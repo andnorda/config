@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
 public class FakePropertyFileRepository implements PropertyFileRepository {
 
     @Override
+    public void update(PropertyFileDto propertyFileDto, String... path) {
+        files.put(StringUtils.join(path, ""), propertyFileDto);
+    }
+
+    @Override
     public Collection<PropertyFileDto> getAll(String... path) {
         return files.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(StringUtils.join(path, "")))
@@ -27,20 +32,5 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     public PropertyFileDto get(String... path) {
         PropertyFileDto propertyFileDto = files.get(StringUtils.join(path, ""));
         return new PropertyFileDto(propertyFileDto.getName(), new HashMap<>(propertyFileDto.getProperties()));
-    }
-
-    @Override
-    public void update(String appName, String fileName, PropertyFileDto propertyFileDto) {
-        files.put(appName + fileName, propertyFileDto);
-    }
-
-    @Override
-    public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
-        files.put(appName + versionName + fileName, propertyFileDto);
-    }
-
-    @Override
-    public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
-        files.put(appName + versionName + instanceName + fileName, propertyFileDto);
     }
 }

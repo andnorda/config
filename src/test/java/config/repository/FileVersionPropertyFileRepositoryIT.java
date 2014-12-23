@@ -152,7 +152,7 @@ public class FileVersionPropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.update("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -161,7 +161,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.update("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -170,7 +170,7 @@ public class FileVersionPropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // When
-            repo.update("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "file");
         }
 
         @Test
@@ -182,7 +182,7 @@ public class FileVersionPropertyFileRepositoryIT {
             writer.close();
 
             // When
-            repo.update("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "file");
 
             // Then
             assertThat(repo.get("app", "version", "file"), CoreMatchers.is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));

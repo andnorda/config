@@ -170,7 +170,7 @@ public class FileInstancePropertyFileRepositoryIT {
 
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.update("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -179,7 +179,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app").mkdir();
 
             // When
-            repo.update("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -188,7 +188,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version").mkdirs();
 
             // When
-            repo.update("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "instance", "file");
         }
 
         @Test (expected = NotFound.class)
@@ -197,7 +197,7 @@ public class FileInstancePropertyFileRepositoryIT {
             new File("repo/app/version/instance").mkdirs();
 
             // When
-            repo.update("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "instance", "file");
         }
 
         @Test
@@ -209,7 +209,7 @@ public class FileInstancePropertyFileRepositoryIT {
             writer.close();
 
             // When
-            repo.update("app", "version", "instance", "file", new PropertyFileDto("file", ImmutableMap.of("key", "new")));
+            repo.update(new PropertyFileDto("file", ImmutableMap.of("key", "new")), "app", "version", "instance", "file");
 
             // Then
             assertThat(repo.get("app", "version", "instance", "file"), CoreMatchers.is(new PropertyFileDto("file", ImmutableMap.of("key", "new"))));

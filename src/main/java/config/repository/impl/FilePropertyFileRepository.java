@@ -13,6 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 public class FilePropertyFileRepository extends FileRepository implements PropertyFileRepository {
+    @Override
+    public void update(PropertyFileDto propertyFileDto, String... path) {
+        List<String> dirs = Arrays.asList(path);
+        String fileName = dirs.get(dirs.size() - 1);
+        dirs = dirs.subList(0, dirs.size() - 1);
+        File file = baseDir;
+        for (String dir : dirs) {
+            file = getSubDirWithName(file, dir);
+        }
+        getPropertyFileWithName(file, fileName);
+        writeNewPropertiesToFile(propertyFileDto, file, fileName);
+    }
+
     private final File baseDir;
 
     public FilePropertyFileRepository(File baseDir) {
@@ -42,31 +55,7 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
         return getAllPropertyFiles(file);
     }
 
-    @Override
-    public void update(String appName, String fileName, PropertyFileDto propertyFileDto) {
-        File app = getAppDir(appName);
-        getPropertyFileWithName(app, fileName);
-        writeNewPropertiesToFile(app, fileName, propertyFileDto);
-    }
-
-    @Override
-    public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        getPropertyFileWithName(version, fileName);
-        writeNewPropertiesToFile(version, fileName, propertyFileDto);
-    }
-
-    @Override
-    public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        File instance = getSubDirWithName(version, instanceName);
-        getPropertyFileWithName(instance, fileName);
-        writeNewPropertiesToFile(instance, fileName, propertyFileDto);
-    }
-
-    private void writeNewPropertiesToFile(File parent, String fileName, PropertyFileDto propertyFileDto) {
+    private void writeNewPropertiesToFile(PropertyFileDto propertyFileDto, File parent, String fileName) {
         PrintWriter writer;
         try {
             writer = new PrintWriter(parent.getPath() + "/" + fileName, "UTF-8");

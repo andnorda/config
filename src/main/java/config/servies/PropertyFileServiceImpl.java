@@ -28,7 +28,7 @@ public class PropertyFileServiceImpl implements PropertyFileService {
     public void changeProperty(String appName, String fileName, String propertyKey, String propertyValue) {
         PropertyFileDto propertyFileDto = repo.get(appName, fileName);
         Map<String, String> properties = updateProperty(propertyKey, propertyValue, propertyFileDto);
-        repo.update(appName, fileName, new PropertyFileDto(propertyFileDto.getName(), properties));
+        repo.update(new PropertyFileDto(propertyFileDto.getName(), properties), appName, fileName);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PropertyFileServiceImpl implements PropertyFileService {
     public void changeProperty(String appName, String versionName, String fileName, String propertyKey, String propertyValue) {
         PropertyFileDto propertyFileDto = repo.get(appName, versionName, fileName);
         Map<String, String> properties = updateProperty(propertyKey, propertyValue, propertyFileDto);
-        repo.update(appName, versionName, fileName, new PropertyFileDto(propertyFileDto.getName(), properties));
+        repo.update(new PropertyFileDto(propertyFileDto.getName(), properties), appName, versionName, fileName);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PropertyFileServiceImpl implements PropertyFileService {
     public void changeProperty(String appName, String versionName, String instanceName, String fileName, String propertyKey, String propertyValue) {
         PropertyFileDto propertyFileDto = repo.get(appName, versionName, instanceName, fileName);
         Map<String, String> properties = updateProperty(propertyKey, propertyValue, propertyFileDto);
-        repo.update(appName, versionName, instanceName, fileName, new PropertyFileDto(propertyFileDto.getName(), properties));
+        repo.update(new PropertyFileDto(propertyFileDto.getName(), properties), appName, versionName, instanceName, fileName);
     }
 
     private Map<String, String> updateProperty(String propertyKey, String propertyValue, PropertyFileDto propertyFileDto) {
