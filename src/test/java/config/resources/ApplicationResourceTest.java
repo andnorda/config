@@ -53,7 +53,7 @@ public class ApplicationResourceTest {
     public void getFile() throws Exception {
         // Given
         PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
-        propertyFileRepository.add("app", "file", propertyFileDto);
+        propertyFileRepository.add(propertyFileDto, "app");
 
         // Then
         assertThat(resource.getFile("app", "file"), is(propertyFileDto));
@@ -64,8 +64,8 @@ public class ApplicationResourceTest {
         // Given
         PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
         PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
-        propertyFileRepository.add("app", "file1", propertyFile1);
-        propertyFileRepository.add("app", "file2", propertyFile2);
+        propertyFileRepository.add(propertyFile1, "app");
+        propertyFileRepository.add(propertyFile2, "app");
 
         // Then
         assertThat(resource.getAllFiles("app"), hasItems(propertyFile1, propertyFile2));
@@ -74,7 +74,7 @@ public class ApplicationResourceTest {
     @Test
     public void changesPropertyValue() throws Exception {
         // Given
-        propertyFileRepository.add("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+        propertyFileRepository.add(new PropertyFileDto("file", ImmutableMap.of("key", "old")), "app");
 
         // When
         resource.changeProperty("app", "file", "key", "new");

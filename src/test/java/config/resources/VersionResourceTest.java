@@ -55,7 +55,7 @@ public class VersionResourceTest {
     public void getFile() throws Exception {
         // Given
         PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
-        propertyFileRepository.add("app", "version", "file", propertyFileDto);
+        propertyFileRepository.add(propertyFileDto, "app", "version");
 
         // Then
         Assert.assertThat(resource.getFile("app", "version", "file"), Is.is(propertyFileDto));
@@ -66,8 +66,8 @@ public class VersionResourceTest {
         // Given
         PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
         PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
-        propertyFileRepository.add("app", "version", "file1", propertyFile1);
-        propertyFileRepository.add("app", "version", "file2", propertyFile2);
+        propertyFileRepository.add(propertyFile1, "app", "version");
+        propertyFileRepository.add(propertyFile2, "app", "version");
 
         // Then
         Assert.assertThat(resource.getAllFiles("app", "version"), hasItems(propertyFile1, propertyFile2));
@@ -76,7 +76,7 @@ public class VersionResourceTest {
     @Test
     public void changesPropertyValue() throws Exception {
         // Given
-        propertyFileRepository.add("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+        propertyFileRepository.add(new PropertyFileDto("file", ImmutableMap.of("key", "old")), "app", "version");
 
         // When
         resource.changeProperty("app", "version", "file", "key", "new");
