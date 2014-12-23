@@ -7,18 +7,29 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class FilePropertyFileRepository extends FileRepository implements PropertyFileRepository {
+    private final File baseDir;
+
     public FilePropertyFileRepository(File baseDir) {
         super(baseDir);
+        this.baseDir = baseDir;
     }
 
     @Override
-    public PropertyFileDto get(String appName, String fileName) {
-        File app = getAppDir(appName);
-        return getPropertyFileWithName(app, fileName);
+    public PropertyFileDto get(String... path) {
+        List<String> dirs = Arrays.asList(path);
+        String fileName = dirs.get(dirs.size() - 1);
+        dirs = dirs.subList(0, dirs.size() - 1);
+        File file = baseDir;
+        for (String dir : dirs) {
+            file = getSubDirWithName(file, dir);
+        }
+        return getPropertyFileWithName(file, fileName);
     }
 
     @Override
@@ -35,13 +46,6 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
     }
 
     @Override
-    public PropertyFileDto get(String appName, String versionName, String fileName) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        return getPropertyFileWithName(version, fileName);
-    }
-
-    @Override
     public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
@@ -54,14 +58,6 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
         return getAllPropertyFiles(version);
-    }
-
-    @Override
-    public PropertyFileDto get(String appName, String versionName, String instanceName, String fileName) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        File instance = getSubDirWithName(version, instanceName);
-        return getPropertyFileWithName(instance, fileName);
     }
 
     @Override

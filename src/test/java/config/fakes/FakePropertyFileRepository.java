@@ -16,8 +16,9 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public PropertyFileDto get(String appName, String fileName) {
-        return new PropertyFileDto(fileName, new HashMap<>(files.get(appName + fileName).getProperties()));
+    public PropertyFileDto get(String... path) {
+        PropertyFileDto propertyFileDto = files.get(StringUtils.join(path, ""));
+        return new PropertyFileDto(propertyFileDto.getName(), new HashMap<>(propertyFileDto.getProperties()));
     }
 
     @Override
@@ -34,11 +35,6 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public PropertyFileDto get(String appName, String versionName, String fileName) {
-        return new PropertyFileDto(fileName, new HashMap<>(files.get(appName + versionName + fileName).getProperties()));
-    }
-
-    @Override
     public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
         files.put(appName + versionName + fileName, propertyFileDto);
     }
@@ -49,11 +45,6 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
                 .filter(entry -> entry.getKey().startsWith(appName + versionName))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public PropertyFileDto get(String appName, String versionName, String instanceName, String fileName) {
-        return new PropertyFileDto(fileName, new HashMap<>(files.get(appName + versionName + instanceName + fileName).getProperties()));
     }
 
     @Override
