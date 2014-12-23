@@ -4,17 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
 import config.repository.impl.FilePropertyFileRepository;
-import org.apache.commons.io.FileUtils;
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,19 +20,14 @@ import static org.hamcrest.core.Is.is;
 public class FilePropertyFileRepositoryIT {
 
     public static class GetOne {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
         private PropertyFileRepository repo;
-        private File baseDir;
 
         @Before
         public void setUp() throws Exception {
-            baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FilePropertyFileRepository(baseDir);
-        }
-
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(baseDir);
+            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
         }
 
         @Test (expected = NotFound.class)
@@ -48,7 +38,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoVersion() throws Exception {
             // Given
-            new File("repo/app").mkdir();
+            folder.newFolder("repo", "app");
 
             // When
             repo.get("app", "version", "file");
@@ -57,7 +47,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoInstance() throws Exception {
             // Given
-            new File("repo/app/version").mkdirs();
+            folder.newFolder("repo", "app", "version");
 
             // When
             repo.get("app", "version", "instance", "file");
@@ -66,7 +56,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoFile() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
+            folder.newFolder("repo", "app", "version", "instance");
 
             // When
             repo.get("app", "version", "instance", "file");
@@ -75,7 +65,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenDirFile() throws Exception {
             // Given
-            new File("repo/app/version/instance/file").mkdirs();
+            folder.newFolder("repo", "app", "version", "instance", "file");
 
             // When
             repo.get("app", "version", "instance", "file");
@@ -84,10 +74,10 @@ public class FilePropertyFileRepositoryIT {
         @Test
         public void returnsPropertyFile() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/file").createNewFile();
-            new File("repo/app/version/file").createNewFile();
-            new File("repo/app/version/instance/file").createNewFile();
+            folder.newFolder("repo", "app", "version", "instance");
+            folder.newFile("repo/app/file");
+            folder.newFile("repo/app/version/file");
+            folder.newFile("repo/app/version/instance/file");
 
             // Then
             PropertyFileDto file = new PropertyFileDto("file", ImmutableMap.of());
@@ -98,19 +88,14 @@ public class FilePropertyFileRepositoryIT {
     }
 
     public static class GetAll {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
         private FilePropertyFileRepository repo;
-        private File baseDir;
 
         @Before
         public void setUp() throws Exception {
-            baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FilePropertyFileRepository(baseDir);
-        }
-
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(baseDir);
+            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
         }
 
         @Test (expected = NotFound.class)
@@ -121,7 +106,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoVersion() throws Exception {
             // Given
-            new File("repo/app").mkdir();
+            folder.newFolder("repo", "app");
 
             // Then
             repo.getAll("app", "version");
@@ -130,7 +115,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoInstance() throws Exception {
             // Given
-            new File("repo/app/version").mkdirs();
+            folder.newFolder("repo", "app", "version");
 
             // Then
             repo.getAll("app", "version", "instance");
@@ -139,7 +124,7 @@ public class FilePropertyFileRepositoryIT {
         @Test
         public void returnsEmptyCollection() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
+            folder.newFolder("repo", "app", "version", "instance");
 
             // Then
             assertThat(repo.getAll("app"), is(empty()));
@@ -150,10 +135,10 @@ public class FilePropertyFileRepositoryIT {
         @Test
         public void returnsCollectionWithOneFile() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/file").createNewFile();
-            new File("repo/app/version/file").createNewFile();
-            new File("repo/app/version/instance/file").createNewFile();
+            folder.newFolder("repo", "app", "version", "instance");
+            folder.newFile("repo/app/file");
+            folder.newFile("repo/app/version/file");
+            folder.newFile("repo/app/version/instance/file");
 
             // Then
             PropertyFileDto file = new PropertyFileDto("file", ImmutableMap.of());
@@ -164,20 +149,15 @@ public class FilePropertyFileRepositoryIT {
     }
 
     public static class Update {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
         private FilePropertyFileRepository repo;
-        private File baseDir;
         private PropertyFileDto file = new PropertyFileDto("file", ImmutableMap.of("key", "new"));
 
         @Before
         public void setUp() throws Exception {
-            baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FilePropertyFileRepository(baseDir);
-        }
-
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(baseDir);
+            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
         }
 
         @Test (expected = NotFound.class)
@@ -188,7 +168,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoVersion() throws Exception {
             // Given
-            new File("repo/app").mkdir();
+            folder.newFolder("repo", "app");
 
             // When
             repo.update(file, "app", "version", "file");
@@ -197,7 +177,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoInstance() throws Exception {
             // Given
-            new File("repo/app/version").mkdirs();
+            folder.newFolder("repo", "app", "version");
 
             // When
             repo.update(file, "app", "version", "instance", "file");
@@ -206,7 +186,7 @@ public class FilePropertyFileRepositoryIT {
         @Test (expected = NotFound.class)
         public void throwsNotFound_GivenNoFile() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
+            folder.newFolder("repo", "app", "version", "instance");
 
             // When
             repo.update(file, "app", "version", "instance", "file");
@@ -215,10 +195,8 @@ public class FilePropertyFileRepositoryIT {
         @Test
         public void updatesProperty() throws Exception {
             // Given
-            new File("repo/app/version/instance").mkdirs();
-            PrintWriter writer = new PrintWriter("repo/app/version/instance/file", "UTF-8");
-            writer.println("key=old");
-            writer.close();
+            folder.newFolder("repo", "app", "version", "instance");
+            folder.newFile("repo/app/version/instance/file");
 
             // When
             repo.update(file, "app", "version", "instance", "file");
