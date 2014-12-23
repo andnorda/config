@@ -78,4 +78,12 @@ public class FileRepository {
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(),
                         entry -> entry.getValue().toString()));
     }
+
+    protected File getDir(String... path) {
+        File file = baseDir;
+        for (String dir : path) {
+            file = getSubDirWithName(file, dir);
+        }
+        return file;
+    }
 }

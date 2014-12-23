@@ -91,7 +91,7 @@ public class FilePropertyFileRepositoryIT {
         @Rule
         public TemporaryFolder folder = new TemporaryFolder();
 
-        private FilePropertyFileRepository repo;
+        private PropertyFileRepository repo;
 
         @Before
         public void setUp() throws Exception {
