@@ -7,7 +7,6 @@ import config.dtos.VersionDto;
 import config.fakes.FakePropertyFileRepository;
 import config.fakes.FakeVersionRepository;
 import config.servies.PropertyFileServiceImpl;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -53,22 +52,22 @@ public class VersionResourceTest {
     }
 
     @Test
-    public void returnsVersionPropertyFile() throws Exception {
+    public void getFile() throws Exception {
         // Given
         PropertyFileDto propertyFileDto = new PropertyFileDto("file", ImmutableMap.of("key", "value"));
-        propertyFileRepository.addVersionPropertyFile("app", "version", "file", propertyFileDto);
+        propertyFileRepository.add("app", "version", "file", propertyFileDto);
 
         // Then
         Assert.assertThat(resource.getFile("app", "version", "file"), Is.is(propertyFileDto));
     }
 
     @Test
-    public void returnsAllVersionPropertyFiles() throws Exception {
+    public void getAllFiles() throws Exception {
         // Given
         PropertyFileDto propertyFile1 = new PropertyFileDto("file1", ImmutableMap.of("key", "value"));
         PropertyFileDto propertyFile2 = new PropertyFileDto("file2", ImmutableMap.of("key", "value"));
-        propertyFileRepository.addVersionPropertyFile("app", "version", "file1", propertyFile1);
-        propertyFileRepository.addVersionPropertyFile("app", "version", "file2", propertyFile2);
+        propertyFileRepository.add("app", "version", "file1", propertyFile1);
+        propertyFileRepository.add("app", "version", "file2", propertyFile2);
 
         // Then
         Assert.assertThat(resource.getAllFiles("app", "version"), hasItems(propertyFile1, propertyFile2));
@@ -77,7 +76,7 @@ public class VersionResourceTest {
     @Test
     public void changesPropertyValue() throws Exception {
         // Given
-        propertyFileRepository.addVersionPropertyFile("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+        propertyFileRepository.add("app", "version", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
 
         // When
         resource.changeProperty("app", "version", "file", "key", "new");

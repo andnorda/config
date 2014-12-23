@@ -26,7 +26,7 @@ public class PropertyFileServiceTest {
     @Test
     public void updatesAppProperty() throws Exception {
         // Given
-        repo.addApplicationPropertyFile("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
+        repo.add("app", "file", new PropertyFileDto("file", ImmutableMap.of("key", "old")));
 
         // When
         service.changeProperty("app", "file", "key", "new");
@@ -38,7 +38,7 @@ public class PropertyFileServiceTest {
     @Test (expected = NotFound.class)
     public void throwsNotFound_GivenKeyMissInApp() throws Exception {
         // Given
-        repo.addApplicationPropertyFile("app", "file", new PropertyFileDto("file", ImmutableMap.of()));
+        repo.add("app", "file", new PropertyFileDto("file", ImmutableMap.of()));
 
         // When
         service.changeProperty("app", "file", "key", "new");

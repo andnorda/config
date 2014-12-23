@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class FakePropertyFileRepository implements PropertyFileRepository {
     private final Map<String, PropertyFileDto> applicationPropertyFiles = new HashMap<>();
 
-    public void addApplicationPropertyFile(String appName, String fileName, PropertyFileDto propertyFileDto) {
+    public void add(String appName, String fileName, PropertyFileDto propertyFileDto) {
         applicationPropertyFiles.put(appName + fileName, propertyFileDto);
     }
 
@@ -33,7 +33,7 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
 
     private final Map<String, PropertyFileDto> versionPropertyFiles = new HashMap<>();
 
-    public void addVersionPropertyFile(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
+    public void add(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
         versionPropertyFiles.put(appName + versionName + fileName, propertyFileDto);
     }
 
@@ -57,7 +57,7 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
 
     private final Map<String, PropertyFileDto> instancePropertyFiles = new HashMap<>();
 
-    public void addInstancePropertyFile(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
+    public void add(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
         instancePropertyFiles.put(appName + versionName + instanceName + fileName, propertyFileDto);
     }
 
