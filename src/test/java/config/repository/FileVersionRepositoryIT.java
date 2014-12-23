@@ -2,7 +2,6 @@ package config.repository;
 
 import config.dtos.VersionDto;
 import config.exceptions.NotFound;
-import config.repository.impl.FileVersionRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +27,7 @@ public class FileVersionRepositoryIT {
         public void setUp() throws Exception {
             File baseDir = new File("repo");
             baseDir.mkdir();
-            repo = new FileVersionRepository(baseDir);
+            repo = new FileVersionRepository(new FileRepository(baseDir));
         }
 
         @After
@@ -95,7 +94,7 @@ public class FileVersionRepositoryIT {
         public void setUp() throws Exception {
             File baseDir = new File("repo");
             baseDir.mkdir();
-            repo = new FileVersionRepository(baseDir);
+            repo = new FileVersionRepository(new FileRepository(baseDir));
         }
 
         @After

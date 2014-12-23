@@ -3,7 +3,6 @@ package config.repository;
 import com.google.common.collect.ImmutableMap;
 import config.dtos.PropertyFileDto;
 import config.exceptions.NotFound;
-import config.repository.impl.FilePropertyFileRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +26,7 @@ public class FilePropertyFileRepositoryIT {
 
         @Before
         public void setUp() throws Exception {
-            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
+            repo = new FilePropertyFileRepository(new FileRepository(folder.newFolder("repo")));
         }
 
         @Test (expected = NotFound.class)
@@ -95,7 +94,7 @@ public class FilePropertyFileRepositoryIT {
 
         @Before
         public void setUp() throws Exception {
-            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
+            repo = new FilePropertyFileRepository(new FileRepository(folder.newFolder("repo")));
         }
 
         @Test (expected = NotFound.class)
@@ -157,7 +156,7 @@ public class FilePropertyFileRepositoryIT {
 
         @Before
         public void setUp() throws Exception {
-            repo = new FilePropertyFileRepository(folder.newFolder("repo"));
+            repo = new FilePropertyFileRepository(new FileRepository(folder.newFolder("repo")));
         }
 
         @Test (expected = NotFound.class)

@@ -2,7 +2,6 @@ package config.repository;
 
 import config.dtos.ApplicationDto;
 import config.exceptions.NotFound;
-import config.repository.impl.FileApplicationRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +27,7 @@ public class FileApplicationRepositoryIT {
         public void setUp() throws Exception {
             File baseDir = new File("repo");
             baseDir.mkdir();
-            repo = new FileApplicationRepository(baseDir);
+            repo = new FileApplicationRepository(new FileRepository(baseDir));
         }
 
         @After
@@ -77,7 +76,7 @@ public class FileApplicationRepositoryIT {
         public void setUp() throws Exception {
             File baseDir = new File("repo");
             baseDir.mkdir();
-            repo = new FileApplicationRepository(baseDir);
+            repo = new FileApplicationRepository(new FileRepository(baseDir));
         }
 
         @After
