@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
 
 public class FakePropertyFileRepository implements PropertyFileRepository {
 
+    @Override
+    public Collection<PropertyFileDto> getAll(String... path) {
+        return files.entrySet().stream()
+                .filter(entry -> entry.getKey().startsWith(StringUtils.join(path, "")))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     private final Map<String, PropertyFileDto> files = new HashMap<>();
 
     public void add(PropertyFileDto propertyFileDto, String... path) {
@@ -27,36 +35,12 @@ public class FakePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
-    public Collection<PropertyFileDto> getAll(String appName) {
-        return files.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(appName))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
     public void update(String appName, String versionName, String fileName, PropertyFileDto propertyFileDto) {
         files.put(appName + versionName + fileName, propertyFileDto);
     }
 
     @Override
-    public Collection<PropertyFileDto> getAll(String appName, String versionName) {
-        return files.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(appName + versionName))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
     public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
         files.put(appName + versionName + instanceName + fileName, propertyFileDto);
-    }
-
-    @Override
-    public List<PropertyFileDto> getAll(String appName, String versionName, String instanceName) {
-        return files.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(appName + versionName + instanceName))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

@@ -33,16 +33,20 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
     }
 
     @Override
+    public Collection<PropertyFileDto> getAll(String... path) {
+        List<String> dirs = Arrays.asList(path);
+        File file = baseDir;
+        for (String dir : dirs) {
+            file = getSubDirWithName(file, dir);
+        }
+        return getAllPropertyFiles(file);
+    }
+
+    @Override
     public void update(String appName, String fileName, PropertyFileDto propertyFileDto) {
         File app = getAppDir(appName);
         getPropertyFileWithName(app, fileName);
         writeNewPropertiesToFile(app, fileName, propertyFileDto);
-    }
-
-    @Override
-    public Collection<PropertyFileDto> getAll(String appName) {
-        File app = getAppDir(appName);
-        return getAllPropertyFiles(app);
     }
 
     @Override
@@ -54,27 +58,12 @@ public class FilePropertyFileRepository extends FileRepository implements Proper
     }
 
     @Override
-    public Collection<PropertyFileDto> getAll(String appName, String versionName) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        return getAllPropertyFiles(version);
-    }
-
-    @Override
     public void update(String appName, String versionName, String instanceName, String fileName, PropertyFileDto propertyFileDto) {
         File app = getAppDir(appName);
         File version = getSubDirWithName(app, versionName);
         File instance = getSubDirWithName(version, instanceName);
         getPropertyFileWithName(instance, fileName);
         writeNewPropertiesToFile(instance, fileName, propertyFileDto);
-    }
-
-    @Override
-    public Collection<PropertyFileDto> getAll(String appName, String versionName, String instanceName) {
-        File app = getAppDir(appName);
-        File version = getSubDirWithName(app, versionName);
-        File instance = getSubDirWithName(version, instanceName);
-        return getAllPropertyFiles(instance);
     }
 
     private void writeNewPropertiesToFile(File parent, String fileName, PropertyFileDto propertyFileDto) {

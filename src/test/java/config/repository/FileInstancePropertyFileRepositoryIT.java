@@ -23,7 +23,7 @@ import static org.hamcrest.core.Is.is;
 public class FileInstancePropertyFileRepositoryIT {
 
     public static class GetOne {
-        private FilePropertyFileRepository repo;
+        private PropertyFileRepository repo;
         private File baseDir;
 
         @Before

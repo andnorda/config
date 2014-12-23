@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.hasItems;
 public class FileApplicationPropertyFileRepositoryIT {
 
     public static class GetOne {
-        private FilePropertyFileRepository repo;
+        private PropertyFileRepository repo;
         private File baseDir;
 
         @Before

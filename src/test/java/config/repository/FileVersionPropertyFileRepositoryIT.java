@@ -83,7 +83,7 @@ public class FileVersionPropertyFileRepositoryIT {
     }
 
     public static class GetAll {
-        private FilePropertyFileRepository repo;
+        private PropertyFileRepository repo;
         private File baseDir;
 
         @Before
