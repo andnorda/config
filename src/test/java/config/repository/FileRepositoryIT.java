@@ -9,7 +9,11 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -169,6 +173,54 @@ public class FileRepositoryIT {
             assertThat(repo.listFiles("app", "version").size(), is(1));
             assertTrue(repo.listFiles("app", "version").iterator().next().isFile());
             assertThat(repo.listFiles("app", "version").iterator().next().getName(), is("file"));
+        }
+    }
+
+    public static class ListSubDirNames {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        private FileRepository repo;
+
+        @Before
+        public void setUp() throws Exception {
+            repo = new FileRepository(folder.newFolder("repo"));
+        }
+
+        @Test
+        public void returnsSubDirNames() throws Exception {
+            // Given
+            File file = folder.newFolder("repo", "app");
+            folder.newFolder("repo", "app", "version");
+            folder.newFile("repo/app/file");
+
+            // Then
+            assertThat(repo.listSubDirNames(file).size(), is(1));
+            assertThat(repo.listSubDirNames(file), hasItems("version"));
+        }
+    }
+
+    public static class ListFileNames {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        private FileRepository repo;
+
+        @Before
+        public void setUp() throws Exception {
+            repo = new FileRepository(folder.newFolder("repo"));
+        }
+
+        @Test
+        public void returnsFileNames() throws Exception {
+            // Given
+            File file = folder.newFolder("repo", "app");
+            folder.newFolder("repo", "app", "version");
+            folder.newFile("repo/app/file");
+
+            // Then
+            assertThat(repo.listFileNames(file).size(), is(1));
+            assertThat(repo.listFileNames(file), hasItems("file"));
         }
     }
 }
