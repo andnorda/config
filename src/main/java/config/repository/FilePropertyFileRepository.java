@@ -17,6 +17,11 @@ public class FilePropertyFileRepository implements PropertyFileRepository {
     }
 
     @Override
+    public PropertyFileDto get(String... path) {
+        return toPropertyFile().apply(fileRepository.getFile(path));
+    }
+
+    @Override
     public Collection<PropertyFileDto> getAll(String... path) {
         Collection<File> files = fileRepository.listFiles(path);
         return files.stream()
@@ -28,39 +33,33 @@ public class FilePropertyFileRepository implements PropertyFileRepository {
         return file -> new PropertyFileDto(file.getName(), getProperties(file));
     }
 
-    @Override
-    public PropertyFileDto get(String... path) {
-        File file = fileRepository.getFile(path);
-        return new PropertyFileDto(file.getName(), getProperties(file));
-    }
-
-    @Override
-    public void update(PropertyFileDto propertyFileDto, String... path) {
-        String fileName = path[path.length - 1];
-        File file = fileRepository.getDir(Arrays.copyOf(path, path.length - 1));
-        fileRepository.getFile(path);
-
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(file.getPath() + "/" + fileName, "UTF-8");
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        for (Map.Entry entry : propertyFileDto.getProperties().entrySet()) {
-            writer.println(entry.getKey() + "=" + entry.getValue());
-        }
-        writer.close();
-    }
-
     private Map<String, String> getProperties(File file) {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(file));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return properties.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(),
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().toString(),
                         entry -> entry.getValue().toString()));
+    }
+
+    @Override
+    public void update(PropertyFileDto propertyFileDto, String... path) {
+        File file = fileRepository.getFile(path);
+        writePropertiesToFile(propertyFileDto, file);
+    }
+
+    private void writePropertiesToFile(PropertyFileDto propertyFileDto, File file) {
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(file.getPath(), "UTF-8");
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        propertyFileDto.getProperties().entrySet().forEach(entry -> writer.println(entry.getKey() + "=" + entry.getValue()));
+        writer.close();
     }
 }

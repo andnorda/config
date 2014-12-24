@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileRepository {
@@ -14,19 +15,6 @@ public class FileRepository {
 
     public FileRepository(File baseDir) {
         this.baseDir = baseDir;
-    }
-
-    protected Collection<String> listSubDirNames(File parent) {
-        File[] listFiles = parent.listFiles(File::isDirectory);
-        return Arrays.asList(listFiles).stream()
-                .map(File::getName)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    protected Collection<String> listFileNames(File parent) {
-        return Arrays.asList(parent.listFiles(File::isFile)).stream()
-                .map(File::getName)
-                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     File getDir(String... path) {
@@ -57,5 +45,19 @@ public class FileRepository {
 
     Collection<File> listFiles(String... path) {
         return Arrays.asList(getDir(path).listFiles(File::isFile));
+    }
+
+    protected Collection<String> listSubDirNames(File parent) {
+        List<File> files = Arrays.asList(parent.listFiles(File::isDirectory));
+        return files.stream()
+                .map(File::getName)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    protected Collection<String> listFileNames(File parent) {
+        List<File> files = Arrays.asList(parent.listFiles(File::isFile));
+        return files.stream()
+                .map(File::getName)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
