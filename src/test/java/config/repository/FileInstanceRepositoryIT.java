@@ -1,141 +1,53 @@
 package config.repository;
 
 import config.dtos.InstanceDto;
-import config.exceptions.NotFound;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
 
-@RunWith(Enclosed.class)
 public class FileInstanceRepositoryIT {
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-    public static class GetOne {
+    private InstanceRepository repo;
 
-        private FileInstanceRepository repo;
-        private File baseDir;
+    @Before
+    public void setUp() throws Exception {
+        repo = new FileInstanceRepository(new FileRepository(folder.newFolder("repo")));
 
-        @Before
-        public void setUp() throws Exception {
-            baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FileInstanceRepository(new FileRepository(baseDir));
-        }
+        folder.newFolder("repo", "app", "version", "instance");
+        folder.newFile("repo/app/version/instance/file1");
+        folder.newFile("repo/app/version/instance/file2");
 
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(baseDir);
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.get("app", "version", "instance");
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoVersion() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-
-            // When
-            repo.get("app", "version", "instance");
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoInstance() throws Exception {
-            // Given
-            new File("repo/app/version").mkdirs();
-
-            // When
-            repo.get("app", "version", "instance");
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNonDirInstance() throws Exception {
-            // Given
-            new File("repo/app/version").mkdirs();
-            new File("repo/app/version/instance").createNewFile();
-
-            // When
-            repo.get("app", "version", "instance");
-        }
-
-        @Test
-        public void returnsInstance() throws Exception {
-            // Given
-            new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/version/instance").createNewFile();
-            new File("repo/app/version/instance/file1").createNewFile();
-            new File("repo/app/version/instance/file2").createNewFile();
-
-            // Then
-            assertThat(repo.get("app", "version", "instance").getName(), is("instance"));
-            assertThat(repo.get("app", "version", "instance").getPropertyFiles(), hasItems("file1", "file2"));
-        }
     }
 
-    public static class GetAll {
+    @Test
+    public void returnInstance() throws Exception {
+        // When
+        InstanceDto instance = repo.get("app", "version", "instance");
 
-        private FileInstanceRepository repo;
-        private File baseDir;
+        // Then
+        assertThat(instance.getName(), is("instance"));
+        assertThat(instance.getPropertyFiles(), hasItems("file1", "file2"));
+    }
 
-        @Before
-        public void setUp() throws Exception {
-            baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FileInstanceRepository(new FileRepository(baseDir));
-        }
+    @Test
+    public void returnsAllInstances() throws Exception {
+        // When
+        Collection<InstanceDto> instances = repo.getAll("app", "version");
 
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(baseDir);
-        }
+        // Then
+        assertThat(instances.size(), is(1));
 
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoApp() throws Exception {
-            repo.getAll("app", "version");
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoVersion() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-
-            // Then
-            repo.getAll("app", "version");
-        }
-
-        @Test
-        public void returnsEmptyCollection_GivenNoInstances() throws Exception {
-            // Given
-            new File("repo/app/version").mkdirs();
-
-            // Then
-            assertThat(repo.getAll("app", "version"), is(empty()));
-        }
-
-        @Test
-        public void returnsCollectionWithOneInstance() throws Exception {
-            // Given
-            new File("repo/app/version/instance").mkdirs();
-            new File("repo/app/version/nonDir").createNewFile();
-            new File("repo/app/version/instance/file1").createNewFile();
-            new File("repo/app/version/instance/file2").createNewFile();
-
-            // Then
-            assertThat(repo.getAll("app", "version").size(), is(1));
-            InstanceDto instance = repo.getAll("app", "version").iterator().next();
-            assertThat(instance.getName(), is("instance"));
-            assertThat(instance.getPropertyFiles(), hasItems("file1", "file2"));
-        }
+        InstanceDto instance = instances.iterator().next();
+        assertThat(instance.getName(), is("instance"));
+        assertThat(instance.getPropertyFiles(), hasItems("file1", "file2"));
     }
 }

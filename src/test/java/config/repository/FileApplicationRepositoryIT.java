@@ -1,117 +1,56 @@
 package config.repository;
 
 import config.dtos.ApplicationDto;
-import config.exceptions.NotFound;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.junit.Assert.assertThat;
 
-@RunWith(Enclosed.class)
 public class FileApplicationRepositoryIT {
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-    public static class GetAll {
+    private ApplicationRepository repo;
 
-        private FileApplicationRepository repo;
+    @Before
+    public void setUp() throws Exception {
+        repo = new FileApplicationRepository(new FileRepository(folder.newFolder("repo")));
 
-        @Before
-        public void setUp() throws Exception {
-            File baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FileApplicationRepository(new FileRepository(baseDir));
-        }
-
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(new File("repo"));
-        }
-
-        @Test
-        public void returnsEmptyCollection_GivenNoApps() throws Exception {
-            assertThat(repo.getAll(), is(empty()));
-        }
-
-        @Test
-        public void returnsCollectionWithOneApplication_GivenOneDir() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-            new File("repo/app/version1").mkdir();
-            new File("repo/app/version2").mkdir();
-            new File("repo/app/file1").createNewFile();
-            new File("repo/app/file2").createNewFile();
-
-            // Then
-            assertThat(repo.getAll().size(), is(1));
-            ApplicationDto application = repo.getAll().iterator().next();
-            assertThat(application.getName(), is("app"));
-            assertThat(application.getVersions(), hasItems("version1", "version2"));
-            assertThat(application.getPropertyFiles(), hasItems("file1", "file2"));
-        }
-
-        @Test
-        public void filtersOutNonDirs() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-            new File("repo/notADir").createNewFile();
-
-            // Then
-            assertThat(repo.getAll().size(), is(1));
-        }
+        folder.newFolder("repo", "app");
+        folder.newFolder("repo", "app", "version1");
+        folder.newFolder("repo", "app", "version2");
+        folder.newFile("repo/app/file1");
+        folder.newFile("repo/app/file2");
     }
 
-    public static class GetOne {
+    @Test
+    public void returnApplication() throws Exception {
+        // When
+        ApplicationDto application = repo.get("app");
 
-        private FileApplicationRepository repo;
+        // Then
+        assertThat(application.getName(), is("app"));
+        assertThat(application.getVersions(), hasItems("version1", "version2"));
+        assertThat(application.getPropertyFiles(), hasItems("file1", "file2"));
+    }
 
-        @Before
-        public void setUp() throws Exception {
-            File baseDir = new File("repo");
-            baseDir.mkdir();
-            repo = new FileApplicationRepository(new FileRepository(baseDir));
-        }
+    @Test
+    public void returnsAllApplications() throws Exception {
+        // When
+        Collection<ApplicationDto> applications = repo.getAll();
 
-        @After
-        public void tearDown() throws Exception {
-            FileUtils.deleteDirectory(new File("repo"));
-        }
+        // Then
+        assertThat(applications.size(), is(1));
 
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNoMatches() throws Exception {
-            repo.get("app");
-        }
-
-        @Test (expected = NotFound.class)
-        public void throwsNotFound_GivenNonDirMatch() throws Exception {
-            // Given
-            new File("repo/app").createNewFile();
-
-            // Then
-            repo.get("app");
-        }
-
-        @Test
-        public void returnApplication() throws Exception {
-            // Given
-            new File("repo/app").mkdir();
-            new File("repo/app/version1").mkdir();
-            new File("repo/app/version2").mkdir();
-            new File("repo/app").createNewFile();
-            new File("repo/app/file1").createNewFile();
-            new File("repo/app/file2").createNewFile();
-
-            // Then
-            assertThat(repo.get("app").getName(), is("app"));
-            assertThat(repo.get("app").getVersions(), hasItems("version1", "version2"));
-            assertThat(repo.get("app").getPropertyFiles(), hasItems("file1", "file2"));
-        }
+        ApplicationDto application = applications.iterator().next();
+        assertThat(application.getName(), is("app"));
+        assertThat(application.getVersions(), hasItems("version1", "version2"));
+        assertThat(application.getPropertyFiles(), hasItems("file1", "file2"));
     }
 }
