@@ -2,17 +2,13 @@ package config.repository;
 
 import com.google.common.collect.ImmutableMap;
 import config.dtos.PropertyFileDto;
-import config.exceptions.NotFound;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
 
 public class FilePropertyFileRepositoryIT {
